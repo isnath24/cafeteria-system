@@ -1,0 +1,23 @@
+# ============================================================
+# Cafeteria System — .gitignore
+# ============================================================
+
+# ── Environment / Secrets (NEVER commit these) ────────────────
+.env
+
+# ── OS & Editor junk ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# ── PHP / Composer ────────────────────────────────────────────
+/vendor/
+composer.lock
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+error_log

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cafeteria Dashboard</title>
+
+  <link rel="stylesheet" href="../Css/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="dashboard-page">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../Images/logo.png" alt="Cafeteria logo" />
+        <div>
+          <h2>Cafeteria</h2>
+          <p>Pre-Order<br />System</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="Dashboard.html" class="active">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+
+        <a href="Menu.html">
+          <i class="fa-solid fa-table-list"></i>
+          Menu
+        </a>
+
+        <a href="MyOrders.html">
+          <i class="fa-solid fa-bag-shopping"></i>
+          My Orders
+        </a>
+
+        <a href="TrackOrders.html">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          Track orders
+        </a>
+
+        <a href="Payments.html">
+          <i class="fa-solid fa-credit-card"></i>
+          Payments
+        </a>
+
+        <a href="Profile.html">
+          <i class="fa-solid fa-user"></i>
+          Profile
+        </a>
+
+        <a href="login.html">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>Welcome back, <span id="studentName">Student</span></h1>
+          <p>What would you like to order today?</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+          </button>
+
+          <div class="user-chip">
+            <div class="avatar">U</div>
+            <span id="headerUserName">User</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <p>Upcoming Orders</p>
+          <h2 id="upcomingOrders">--</h2>
+          <a href="MyOrders.html">View details</a>
+        </div>
+
+        <div class="summary-card">
+          <p>Total Orders</p>
+          <h2 id="totalOrders">--</h2>
+          <a href="MyOrders.html">View details</a>
+        </div>
+
+        <div class="summary-card">
+          <p>Completed Orders</p>
+          <h2 id="completedOrders">--</h2>
+          <a href="MyOrders.html">View details</a>
+        </div>
+
+        <div class="summary-card">
+          <p>Total Spent</p>
+          <h2 id="totalSpent">--</h2>
+          <a href="Payments.html">View details</a>
+        </div>
+      </section>
+
+      <section class="quick-actions">
+        <a href="Menu.html" class="action-card">
+          <i class="fa-solid fa-utensils"></i>
+          <span>Browse Menu</span>
+        </a>
+
+        <a href="Cart.html" class="action-card">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>View Cart</span>
+        </a>
+
+        <a href="TrackOrders.html" class="action-card">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>Track Order</span>
+        </a>
+      </section>
+
+      <section class="status-panel">
+        <div class="section-title">
+          <h2>Current Order</h2>
+          <a href="TrackOrders.html">Track</a>
+        </div>
+
+        <div class="current-order-card">
+          <div>
+            <p>Order ID</p>
+            <h3 id="currentOrderId">--</h3>
+          </div>
+
+          <span class="status-pill" id="currentOrderStatus">No active order</span>
+        </div>
+      </section>
+
+      <section class="menu-preview">
+        <div class="section-title">
+          <h2>Today's Menu Highlights</h2>
+          <a href="Menu.html">See all</a>
+        </div>
+
+        <div class="food-grid" id="menuPreview">
+          <article class="food-card">
+            <img src="../Images/rice.jpg" alt="Rice and curry" />
+            <h3 id="foodName1">Rice & Curry</h3>
+            <p id="foodPrice1">--</p>
+            <a href="Menu.html" class="order-btn">Order Now</a>
+          </article>
+
+          <article class="food-card">
+            <img src="../Images/kottu.jpg" alt="Kottu" />
+            <h3 id="foodName2">Kottu</h3>
+            <p id="foodPrice2">--</p>
+            <a href="Menu.html" class="order-btn">Order Now</a>
+          </article>
+
+          <article class="food-card">
+            <img src="../Images/fried-rice.jpg" alt="Fried rice" />
+            <h3 id="foodName3">Fried Rice</h3>
+            <p id="foodPrice3">--</p>
+            <a href="Menu.html" class="order-btn">Order Now</a>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

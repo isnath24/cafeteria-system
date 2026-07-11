@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart - Cafeteria Pre-Order System</title>
+
+  <link rel="stylesheet" href="../CSS/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="dashboard-page">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../Images/logo.png" alt="Cafeteria logo" />
+        <div>
+          <h2>Cafeteria</h2>
+          <p>Pre-Order<br />System</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="Dashboard.html">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+
+        <a href="Menu.html">
+          <i class="fa-solid fa-table-list"></i>
+          Menu
+        </a>
+
+        <a href="MyOrders.html">
+          <i class="fa-solid fa-bag-shopping"></i>
+          My Orders
+        </a>
+
+        <a href="TrackOrders.html">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          Track orders
+        </a>
+
+        <a href="Payments.html">
+          <i class="fa-solid fa-credit-card"></i>
+          Payments
+        </a>
+
+        <a href="Profile.html">
+          <i class="fa-solid fa-user"></i>
+          Profile
+        </a>
+
+        <a href="login.html">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Cart Content -->
+    <main class="cart-main-content">
+      <div class="cart-inner">
+        <!-- Cart Panel -->
+        <section class="cart-panel">
+          <div class="cart-header">
+            <h1>Your Cart <span id="cartCount">(3 Items)</span></h1>
+            <p>Review your selected meals before placing the order.</p>
+          </div>
+
+          <div class="cart-items" id="cartItems">
+            <article class="cart-item">
+              <img src="../Images/rice.jpg" alt="Rice and curry" />
+
+              <div class="item-info">
+                <h2>Rice and Curry</h2>
+                <p id="riceCartPrice" class="price">Rs.150</p>
+              </div>
+
+              <div class="qty-box">
+                <button class="minus-btn" type="button" aria-label="Decrease quantity">-</button>
+                <span class="quantity">1</span>
+                <button class="plus-btn" type="button" aria-label="Increase quantity">+</button>
+              </div>
+
+              <button class="delete-btn" type="button" aria-label="Remove item">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </article>
+
+            <article class="cart-item">
+              <img src="../Images/kottu.jpg" alt="Kottu" />
+
+              <div class="item-info">
+                <h2>Kottu</h2>
+                <p id="kottuCartPrice" class="price">Rs.300</p>
+              </div>
+
+              <div class="qty-box">
+                <button class="minus-btn" type="button" aria-label="Decrease quantity">-</button>
+                <span class="quantity">1</span>
+                <button class="plus-btn" type="button" aria-label="Increase quantity">+</button>
+              </div>
+
+              <button class="delete-btn" type="button" aria-label="Remove item">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </article>
+
+            <article class="cart-item">
+              <img src="../Images/fried-rice.jpg" alt="Fried rice" />
+
+              <div class="item-info">
+                <h2>Fried Rice</h2>
+                <p id="friedRiceCartPrice" class="price">Rs.290</p>
+              </div>
+
+              <div class="qty-box">
+                <button class="minus-btn" type="button" aria-label="Decrease quantity">-</button>
+                <span class="quantity">1</span>
+                <button class="plus-btn" type="button" aria-label="Increase quantity">+</button>
+              </div>
+
+              <button class="delete-btn" type="button" aria-label="Remove item">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </article>
+          </div>
+
+          <a href="Menu.html" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to menu
+          </a>
+        </section>
+
+        <!-- Checkout Panel -->
+        <aside class="checkout-panel">
+          <section class="summary-box">
+            <h2>Order Summary</h2>
+
+            <div class="summary-card">
+              <div class="summary-row">
+                <span>Sub Total</span>
+                <strong id="subTotal">Rs.650</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Service Fee</span>
+                <strong id="serviceFee">Rs.20</strong>
+              </div>
+
+              <div class="summary-row total">
+                <span>Total</span>
+                <strong id="totalAmount">Rs.670</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="payment-box">
+            <h2>Payment Method</h2>
+
+            <label class="payment-option">
+              <input type="radio" name="payment" />
+              <span class="radio-dot"></span>
+              <strong>Cash on pickup</strong>
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="payment" checked />
+              <span class="radio-dot"></span>
+              <strong>Card payment</strong>
+            </label>
+          </section>
+
+          <button
+            class="place-order-btn"
+            type="button"
+            onclick="window.location.href='TrackOrders.html'"
+          >
+            Place Order
+          </button>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script src="../Js/script.js"></script>
+</body>
+</html>

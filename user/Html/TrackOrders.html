@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Order - Cafeteria Pre-Order System</title>
+  <link rel="stylesheet" href="../CSS/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="dashboard-page">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../Images/logo.png" alt="Cafeteria logo" />
+        <div>
+          <h2>Cafeteria</h2>
+          <p>Pre-Order<br />System</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="Dashboard.html">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+
+        <a href="Menu.html">
+          <i class="fa-solid fa-table-list"></i>
+          Menu
+        </a>
+
+        <a href="MyOrders.html">
+          <i class="fa-solid fa-bag-shopping"></i>
+          My Orders
+        </a>
+
+        <a href="TrackOrders.html" class="active">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          Track orders
+        </a>
+
+        <a href="Payments.html">
+          <i class="fa-solid fa-credit-card"></i>
+          Payments
+        </a>
+
+        <a href="Profile.html">
+          <i class="fa-solid fa-user"></i>
+          Profile
+        </a>
+
+        <a href="login.html">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Track Order Main Content -->
+    <main class="main-content track-main-content">
+      <main class="tracking-page-inner">
+        <header class="tracking-header">
+          <h1>Order#<span id="orderNumber">----</span></h1>
+          <span class="status-badge" id="orderStatus">Processing</span>
+        </header>
+
+        <section class="tracking-layout">
+          <div class="timeline">
+            <div class="timeline-step completed">
+              <div class="dot">✓</div>
+              <div>
+                <h2>Order Placed</h2>
+                <p id="placedTime">--</p>
+              </div>
+            </div>
+
+            <div class="timeline-step active">
+              <div class="dot">✓</div>
+              <div>
+                <h2>Processing</h2>
+                <p id="processingTime">--</p>
+              </div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="dot"></div>
+              <div>
+                <h2>Ready for pickup</h2>
+                <p>Pending</p>
+              </div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="dot"></div>
+              <div>
+                <h2>Order Completed</h2>
+                <p>Pending</p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="details-area">
+            <section class="order-details">
+              <h2>Order Details</h2>
+
+              <div class="detail-row">
+                <span>Order ID</span>
+                <strong id="orderId">--</strong>
+              </div>
+
+              <div class="detail-row">
+                <span>Date</span>
+                <strong id="orderDate">--</strong>
+              </div>
+
+              <div class="detail-row">
+                <span>Pickup time</span>
+                <strong id="pickupTime">--</strong>
+              </div>
+
+              <div class="detail-row">
+                <span>Payment Method</span>
+                <strong id="paymentMethod">--</strong>
+              </div>
+
+              <div class="detail-row">
+                <span>Total Amount</span>
+                <strong id="totalAmount">--</strong>
+              </div>
+            </section>
+
+            <section class="items-box">
+              <div class="items-header">Items</div>
+
+              <div class="item-row">
+                <span class="item-name">--</span>
+                <span class="item-qty">--</span>
+                <span class="item-price">--</span>
+              </div>
+
+              <div class="item-row">
+                <span class="item-name">--</span>
+                <span class="item-qty">--</span>
+                <span class="item-price">--</span>
+              </div>
+
+              <div class="item-row">
+                <span class="item-name">--</span>
+                <span class="item-qty">--</span>
+                <span class="item-price">--</span>
+              </div>
+            </section>
+
+            <button class="qr-btn" type="button">View QR Code</button>
+          </aside>
+        </section>
+      </main>
+    </main>
+  </div>
+</body>
+</html>

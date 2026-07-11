@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile - Cafeteria Pre-Order System</title>
+  <link rel="stylesheet" href="../CSS/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="dashboard-page">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../Images/logo.png" alt="Cafeteria logo" />
+        <div>
+          <h2>Cafeteria</h2>
+          <p>Pre-Order<br />System</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="Dashboard.html">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+
+        <a href="Menu.html">
+          <i class="fa-solid fa-table-list"></i>
+          Menu
+        </a>
+
+        <a href="MyOrders.html">
+          <i class="fa-solid fa-bag-shopping"></i>
+          My Orders
+        </a>
+
+        <a href="TrackOrders.html">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          Track orders
+        </a>
+
+        <a href="Payments.html">
+          <i class="fa-solid fa-credit-card"></i>
+          Payments
+        </a>
+
+        <a href="Profile.html" class="active">
+          <i class="fa-solid fa-user"></i>
+          Profile
+        </a>
+
+        <a href="login.html">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>My Profile</h1>
+          <p>Manage your personal information and account settings</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+          </button>
+
+          <div class="user-chip">
+            <div class="avatar">S</div>
+            <span>Student</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="profile-layout">
+
+        <!-- Left Column: Avatar + quick info -->
+        <aside class="profile-card-col">
+          <div class="profile-avatar-card">
+            <div class="profile-avatar-circle">
+              <img src="../Images/profile.jpg" alt="Profile photo" class="profile-avatar-img" id="profileAvatarImg" />
+            </div>
+            <h3 class="profile-name" id="displayName">Shaila Fernando</h3>
+            <p class="profile-student-id" id="displayStudentId">UWU/ICT/21/0034</p>
+            <p class="profile-role">Student</p>
+          </div>
+
+          <div class="profile-quick-stats">
+            <div class="pqs-row">
+              <span class="pqs-label"><i class="fa-solid fa-bag-shopping"></i> Total Orders</span>
+              <span class="pqs-value">4</span>
+            </div>
+            <div class="pqs-row">
+              <span class="pqs-label"><i class="fa-solid fa-money-bill-wave"></i> Total Spent</span>
+              <span class="pqs-value">Rs.2,130</span>
+            </div>
+            <div class="pqs-row">
+              <span class="pqs-label"><i class="fa-solid fa-circle-check"></i> Completed</span>
+              <span class="pqs-value">1</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Column: Edit Forms -->
+        <div class="profile-forms-col">
+
+          <!-- Personal Info Section -->
+          <section class="profile-section-card" id="editProfileSection">
+            <div class="profile-section-header">
+              <h2><i class="fa-solid fa-user-pen"></i> Personal Information</h2>
+              <button class="btn-edit-toggle" id="editToggleBtn" type="button">
+                <i class="fa-solid fa-pen"></i> Edit
+              </button>
+            </div>
+
+            <form id="profileForm">
+              <div class="profile-form-grid">
+                <div class="profile-form-group">
+                  <label for="fullNameField">Full Name</label>
+                  <input type="text" id="fullNameField" value="Shaila Fernando" placeholder="Enter full name" disabled />
+                </div>
+
+                <div class="profile-form-group">
+                  <label for="studentIdField">Student ID</label>
+                  <input type="text" id="studentIdField" value="UWU/ICT/21/0034" placeholder="Enter student ID" disabled />
+                </div>
+
+                <div class="profile-form-group">
+                  <label for="emailField">Email Address</label>
+                  <input type="email" id="emailField" value="shaila@uwu.ac.lk" placeholder="Enter email" disabled />
+                </div>
+
+                <div class="profile-form-group">
+                  <label for="phoneField">Phone Number</label>
+                  <input type="tel" id="phoneField" value="+94 77 123 4567" placeholder="Enter phone number" disabled />
+                </div>
+
+
+              </div>
+
+              <div class="profile-form-actions" id="profileFormActions" style="display:none;">
+                <button type="submit" class="btn-save-profile" id="saveProfileBtn">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                </button>
+                <button type="button" class="btn-cancel-edit" id="cancelEditBtn">Cancel</button>
+              </div>
+
+              <p class="profile-save-msg" id="profileSaveMsg"></p>
+            </form>
+          </section>
+
+          <!-- Change Password Section -->
+          <section class="profile-section-card" id="changePasswordSection">
+            <div class="profile-section-header">
+              <h2><i class="fa-solid fa-lock"></i> Change Password</h2>
+            </div>
+
+            <form id="passwordForm">
+              <div class="profile-form-grid">
+                <div class="profile-form-group profile-form-full">
+                  <label for="currentPassword">Current Password</label>
+                  <div class="profile-pwd-field">
+                    <input type="password" id="currentPassword" placeholder="Enter current password" />
+                    <button type="button" class="profile-eye-btn" data-target="currentPassword" aria-label="Toggle visibility">
+                      <i class="fa-regular fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="profile-form-group">
+                  <label for="newPassword">New Password</label>
+                  <div class="profile-pwd-field">
+                    <input type="password" id="newPassword" placeholder="Enter new password" />
+                    <button type="button" class="profile-eye-btn" data-target="newPassword" aria-label="Toggle visibility">
+                      <i class="fa-regular fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="profile-form-group">
+                  <label for="confirmNewPassword">Confirm New Password</label>
+                  <div class="profile-pwd-field">
+                    <input type="password" id="confirmNewPassword" placeholder="Confirm new password" />
+                    <button type="button" class="profile-eye-btn" data-target="confirmNewPassword" aria-label="Toggle visibility">
+                      <i class="fa-regular fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-form-actions">
+                <button type="submit" class="btn-save-profile">
+                  <i class="fa-solid fa-key"></i> Update Password
+                </button>
+              </div>
+
+              <p class="profile-save-msg" id="passwordSaveMsg"></p>
+            </form>
+          </section>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Edit profile toggle
+    var editToggleBtn = document.getElementById('editToggleBtn');
+    var cancelEditBtn = document.getElementById('cancelEditBtn');
+    var profileFormActions = document.getElementById('profileFormActions');
+    var profileInputs = document.querySelectorAll('#profileForm input');
+    var profileSaveMsg = document.getElementById('profileSaveMsg');
+    var profileForm = document.getElementById('profileForm');
+
+    editToggleBtn.addEventListener('click', function() {
+      profileInputs.forEach(function(inp) { inp.disabled = false; });
+      profileFormActions.style.display = 'flex';
+      editToggleBtn.style.display = 'none';
+    });
+
+    cancelEditBtn.addEventListener('click', function() {
+      profileInputs.forEach(function(inp) { inp.disabled = true; });
+      profileFormActions.style.display = 'none';
+      editToggleBtn.style.display = '';
+      profileSaveMsg.textContent = '';
+    });
+
+    profileForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Update display name and student ID
+      document.getElementById('displayName').textContent = document.getElementById('fullNameField').value;
+      document.getElementById('displayStudentId').textContent = document.getElementById('studentIdField').value;
+      profileInputs.forEach(function(inp) { inp.disabled = true; });
+      profileFormActions.style.display = 'none';
+      editToggleBtn.style.display = '';
+      profileSaveMsg.textContent = 'Profile updated successfully!';
+      profileSaveMsg.style.color = 'green';
+      setTimeout(function() { profileSaveMsg.textContent = ''; }, 3000);
+    });
+
+    // Password form
+    var passwordForm = document.getElementById('passwordForm');
+    var passwordSaveMsg = document.getElementById('passwordSaveMsg');
+
+    passwordForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var newPwd = document.getElementById('newPassword').value;
+      var confirmPwd = document.getElementById('confirmNewPassword').value;
+
+      if (!document.getElementById('currentPassword').value) {
+        passwordSaveMsg.textContent = 'Please enter your current password.';
+        passwordSaveMsg.style.color = 'red';
+        return;
+      }
+      if (newPwd !== confirmPwd) {
+        passwordSaveMsg.textContent = 'New passwords do not match.';
+        passwordSaveMsg.style.color = 'red';
+        return;
+      }
+      if (newPwd.length < 6) {
+        passwordSaveMsg.textContent = 'Password must be at least 6 characters.';
+        passwordSaveMsg.style.color = 'red';
+        return;
+      }
+      passwordForm.reset();
+      passwordSaveMsg.textContent = 'Password updated successfully!';
+      passwordSaveMsg.style.color = 'green';
+      setTimeout(function() { passwordSaveMsg.textContent = ''; }, 3000);
+    });
+
+    // Eye toggle for password fields
+    document.querySelectorAll('.profile-eye-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var target = document.getElementById(btn.getAttribute('data-target'));
+        var icon = btn.querySelector('i');
+        if (target.type === 'password') {
+          target.type = 'text';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          target.type = 'password';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>

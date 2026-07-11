@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cafeteria Menu</title>
+
+  <link rel="stylesheet" href="../Css/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="menu-page">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../Images/logo.png" alt="Cafeteria logo" />
+        <div>
+          <h2>Cafeteria</h2>
+          <p>Pre-Order<br />System</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="Dashboard.html">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+
+        <a href="Menu.html" class="active">
+          <i class="fa-solid fa-table-list"></i>
+          Menu
+        </a>
+
+        <a href="MyOrders.html">
+          <i class="fa-solid fa-bag-shopping"></i>
+          My Orders
+        </a>
+
+        <a href="TrackOrders.html">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          Track orders
+        </a>
+
+        <a href="Payments.html">
+          <i class="fa-solid fa-credit-card"></i>
+          Payments
+        </a>
+
+        <a href="Profile.html">
+          <i class="fa-solid fa-user"></i>
+          Profile
+        </a>
+
+        <a href="login.html">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <main class="menu-content">
+      <header class="menu-header">
+  <div class="search-box">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search food items..." />
+  </div>
+
+  <select class="category-select">
+    <option>All Categories</option>
+    <option>Rice and Curry</option>
+    <option>Kottu</option>
+    <option>Noodles</option>
+    <option>Curry</option>
+  </select>
+
+  <button class="notification-btn" type="button" aria-label="Notifications">
+    <i class="fa-regular fa-bell"></i>
+  </button>
+</header>
+
+      <section class="food-list">
+        <article class="food-card">
+          <img src="../Images/rice.jpg" alt="Rice and curry" />
+          <h3>Rice & Curry</h3>
+          <p id="ricePrice">--</p>
+          <a href="Cart.html" class="order-btn">Order Now</a>
+        </article>
+
+        <article class="food-card">
+          <img src="../Images/kottu.jpg" alt="Kottu" />
+          <h3>Kottu</h3>
+          <p id="kottuPrice">--</p>
+          <a href="Cart.html" class="order-btn">Order Now</a>
+        </article>
+
+        <article class="food-card">
+          <img src="../Images/fried-rice.jpg" alt="Fried rice" />
+          <h3>Fried Rice</h3>
+          <p id="friedRicePrice">--</p>
+          <a href="Cart.html" class="order-btn">Order Now</a>
+        </article>
+
+        <article class="food-card">
+          <img src="../Images/string-hoppers.jpg" alt="String hoppers" />
+          <h3>String Hoppers</h3>
+          <p id="stringHoppersPrice">--</p>
+          <a href="Cart.html" class="order-btn">Order Now</a>
+        </article>
+
+        <article class="food-card">
+          <img src="../Images/noodles.jpg" alt="Noodles" />
+          <h3>Noodles</h3>
+          <p id="noodlesPrice">--</p>
+          <a href="Cart.html" class="order-btn">Order Now</a>
+        </article>
+
+        <article class="food-card">
+          <img src="../Images/egg-curry.jpg" alt="Egg curry" />
+          <h3>Egg Curry</h3>
+          <p id="eggCurryPrice">--</p>
+          <a href="Cart.html" class="order-btn">Order Now</a>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

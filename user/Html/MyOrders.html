@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Orders - Cafeteria Pre-Order System</title>
+  <link rel="stylesheet" href="../CSS/style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="dashboard-page">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../Images/logo.png" alt="Cafeteria logo" />
+        <div>
+          <h2>Cafeteria</h2>
+          <p>Pre-Order<br />System</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="Dashboard.html">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+
+        <a href="Menu.html">
+          <i class="fa-solid fa-table-list"></i>
+          Menu
+        </a>
+
+        <a href="MyOrders.html" class="active">
+          <i class="fa-solid fa-bag-shopping"></i>
+          My Orders
+        </a>
+
+        <a href="TrackOrders.html">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          Track orders
+        </a>
+
+        <a href="Payments.html">
+          <i class="fa-solid fa-credit-card"></i>
+          Payments
+        </a>
+
+        <a href="Profile.html">
+          <i class="fa-solid fa-user"></i>
+          Profile
+        </a>
+
+        <a href="login.html">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>My Orders</h1>
+          <p>View and manage all your placed orders</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+          </button>
+
+          <div class="user-chip">
+            <div class="avatar">U</div>
+            <span>User</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Filter Tabs -->
+      <div class="orders-filter-bar">
+        <button class="filter-tab active" data-filter="all" id="filterAll">All Orders</button>
+        <button class="filter-tab" data-filter="pending" id="filterPending">Pending</button>
+        <button class="filter-tab" data-filter="processing" id="filterProcessing">Processing</button>
+        <button class="filter-tab" data-filter="ready" id="filterReady">Ready</button>
+        <button class="filter-tab" data-filter="completed" id="filterCompleted">Completed</button>
+      </div>
+
+      <!-- Orders List -->
+      <section class="orders-section" id="ordersSection">
+
+        <!-- Order Card 1 -->
+        <div class="order-card" data-status="completed">
+          <div class="order-card-header">
+            <div class="order-id-group">
+              <span class="order-id">#ORD-2024-001</span>
+              <span class="order-date"><i class="fa-regular fa-calendar"></i> 15 Jun 2024 &nbsp;|&nbsp; 10:30 AM</span>
+            </div>
+            <span class="order-status-badge badge-completed">Completed</span>
+          </div>
+
+          <div class="order-card-body">
+            <div class="order-items-list">
+              <div class="order-item-row">
+                <img src="../Images/rice.jpg" alt="Rice and Curry" class="order-thumb" />
+                <div class="order-item-info">
+                  <span class="order-item-name">Rice &amp; Curry</span>
+                  <span class="order-item-qty">x2</span>
+                </div>
+                <span class="order-item-price">Rs.300</span>
+              </div>
+              <div class="order-item-row">
+                <img src="../Images/kottu.jpg" alt="Kottu" class="order-thumb" />
+                <div class="order-item-info">
+                  <span class="order-item-name">Kottu</span>
+                  <span class="order-item-qty">x1</span>
+                </div>
+                <span class="order-item-price">Rs.300</span>
+              </div>
+            </div>
+
+            <div class="order-card-footer">
+              <div class="order-total">
+                <span>Total Amount</span>
+                <strong>Rs.620</strong>
+              </div>
+              <div class="order-card-actions">
+                <a href="TrackOrders.html" class="btn-view-details">
+                  <i class="fa-solid fa-eye"></i> View Details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Card 2 -->
+        <div class="order-card" data-status="processing">
+          <div class="order-card-header">
+            <div class="order-id-group">
+              <span class="order-id">#ORD-2024-002</span>
+              <span class="order-date"><i class="fa-regular fa-calendar"></i> 19 Jun 2024 &nbsp;|&nbsp; 12:15 PM</span>
+            </div>
+            <span class="order-status-badge badge-processing">Processing</span>
+          </div>
+
+          <div class="order-card-body">
+            <div class="order-items-list">
+              <div class="order-item-row">
+                <img src="../Images/fried-rice.jpg" alt="Fried Rice" class="order-thumb" />
+                <div class="order-item-info">
+                  <span class="order-item-name">Fried Rice</span>
+                  <span class="order-item-qty">x1</span>
+                </div>
+                <span class="order-item-price">Rs.290</span>
+              </div>
+              <div class="order-item-row">
+                <img src="../Images/noodles.jpg" alt="Noodles" class="order-thumb" />
+                <div class="order-item-info">
+                  <span class="order-item-name">Noodles</span>
+                  <span class="order-item-qty">x2</span>
+                </div>
+                <span class="order-item-price">Rs.360</span>
+              </div>
+            </div>
+
+            <div class="order-card-footer">
+              <div class="order-total">
+                <span>Total Amount</span>
+                <strong>Rs.670</strong>
+              </div>
+              <div class="order-card-actions">
+                <a href="TrackOrders.html" class="btn-view-details">
+                  <i class="fa-solid fa-eye"></i> View Details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Card 3 -->
+        <div class="order-card" data-status="ready">
+          <div class="order-card-header">
+            <div class="order-id-group">
+              <span class="order-id">#ORD-2024-003</span>
+              <span class="order-date"><i class="fa-regular fa-calendar"></i> 19 Jun 2024 &nbsp;|&nbsp; 01:00 PM</span>
+            </div>
+            <span class="order-status-badge badge-ready">Ready</span>
+          </div>
+
+          <div class="order-card-body">
+            <div class="order-items-list">
+              <div class="order-item-row">
+                <img src="../Images/string-hoppers.jpg" alt="String Hoppers" class="order-thumb" />
+                <div class="order-item-info">
+                  <span class="order-item-name">String Hoppers</span>
+                  <span class="order-item-qty">x3</span>
+                </div>
+                <span class="order-item-price">Rs.450</span>
+              </div>
+            </div>
+
+            <div class="order-card-footer">
+              <div class="order-total">
+                <span>Total Amount</span>
+                <strong>Rs.470</strong>
+              </div>
+              <div class="order-card-actions">
+                <a href="TrackOrders.html" class="btn-view-details">
+                  <i class="fa-solid fa-eye"></i> View Details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Card 4 -->
+        <div class="order-card" data-status="pending">
+          <div class="order-card-header">
+            <div class="order-id-group">
+              <span class="order-id">#ORD-2024-004</span>
+              <span class="order-date"><i class="fa-regular fa-calendar"></i> 19 Jun 2024 &nbsp;|&nbsp; 02:45 PM</span>
+            </div>
+            <span class="order-status-badge badge-pending">Pending</span>
+          </div>
+
+          <div class="order-card-body">
+            <div class="order-items-list">
+              <div class="order-item-row">
+                <img src="../Images/egg-curry.jpg" alt="Egg Curry" class="order-thumb" />
+                <div class="order-item-info">
+                  <span class="order-item-name">Egg Curry</span>
+                  <span class="order-item-qty">x1</span>
+                </div>
+                <span class="order-item-price">Rs.200</span>
+              </div>
+              <div class="order-item-row">
+                <img src="../Images/rice.jpg" alt="Rice and Curry" class="order-thumb" />
+                <div class="order-item-info">
+                  <span class="order-item-name">Rice &amp; Curry</span>
+                  <span class="order-item-qty">x1</span>
+                </div>
+                <span class="order-item-price">Rs.150</span>
+              </div>
+            </div>
+
+            <div class="order-card-footer">
+              <div class="order-total">
+                <span>Total Amount</span>
+                <strong>Rs.370</strong>
+              </div>
+              <div class="order-card-actions">
+                <a href="TrackOrders.html" class="btn-view-details">
+                  <i class="fa-solid fa-eye"></i> View Details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Empty State (hidden by default) -->
+      <div class="orders-empty" id="ordersEmpty" style="display:none;">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <p>No orders found for this filter.</p>
+        <a href="Menu.html" class="order-btn" style="display:inline-flex;margin-top:12px;">Browse Menu</a>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Filter tabs logic
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const orderCards = document.querySelectorAll('.order-card');
+    const ordersEmpty = document.getElementById('ordersEmpty');
+
+    filterTabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        filterTabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+
+        const filter = tab.getAttribute('data-filter');
+        let visibleCount = 0;
+
+        orderCards.forEach(function(card) {
+          if (filter === 'all' || card.getAttribute('data-status') === filter) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        ordersEmpty.style.display = visibleCount === 0 ? 'flex' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
