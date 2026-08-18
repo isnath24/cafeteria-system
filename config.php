@@ -32,12 +32,34 @@ function require_student()
     }
 }
 
+// ── Auth guard: kitchen staff pages ───────────────────────────
+function require_kitchen()
+{
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'kitchen') {
+        header('Location: ' . get_login_url());
+        exit;
+    }
+}
+
+// ── Shared: determine current meal serving period ─────────────
+// Breakfast: 6:00–11:59, Lunch: 12:00–17:59, Dinner: 18:00–20:59, else closed
+function current_meal_period(): ?string
+{
+    $hour = (int)date('G');
+    if ($hour >= 6  && $hour < 12) return 'Breakfast';
+    if ($hour >= 12 && $hour < 18) return 'Lunch';
+    if ($hour >= 18 && $hour < 21) return 'Dinner';
+    return null; // Cafeteria closed
+}
+
 // ── Redirect if already logged in ───────────────────────────
 function redirect_if_logged_in()
 {
     if (isset($_SESSION['user_id'])) {
         if ($_SESSION['role'] === 'admin') {
             header('Location: /cafeteria-system/admin/index.php');
+        } elseif ($_SESSION['role'] === 'kitchen') {
+            header('Location: /cafeteria-system/kitchen/index.php');
         } else {
             header('Location: /cafeteria-system/user/Html/Dashboard.php');
         }
