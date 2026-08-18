@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UWU Cafeteria - Meal Preparation</title>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ============================================================
+    SIDEBAR / MENU BAR
+    ============================================================ -->
+    <nav class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="sidebar-logo">
+            <img src="images/logo.png" alt="UWU Logo" />
+            <span>UWU Cafeteria<br /><small style="font-weight:400;font-size:12px;opacity:0.7;">Pre-order System</small></span>
+        </div>
+
+        <!-- Menu Items with Navigation Links -->
+        <ul class="sidebar-menu">
+            <!-- Dashboard Link -->
+            <li data-page="dashboard">
+                <i class="fas fa-th-large"></i> 
+                <a href="index.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Dashboard
+                </a>
+            </li>
+            
+            <!-- Orders Link -->
+            <li data-page="orders">
+                <i class="fas fa-clipboard-list"></i> 
+                <a href="orders.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Orders
+                </a>
+            </li>
+            
+            <!-- Meal Preparation Link (Active) -->
+            <li class="active" data-page="meal-prep">
+                <i class="fas fa-utensils"></i> 
+                <a href="meal-prep.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Meal Preparation
+                </a>
+            </li>
+            
+            <!-- Stock Management Link -->
+            <li data-page="stock">
+                <i class="fas fa-boxes"></i> 
+                <a href="stock.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Stock Management
+                </a>
+            </li>
+            
+            <!-- Low Stock Alert Link -->
+            <li data-page="low-stock">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <a href="low-stock.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Low Stock Alert
+                </a>
+            </li>
+        </ul>
+
+        <!-- Logout Button -->
+        <div class="sidebar-logout">
+            <i class="fas fa-sign-out-alt"></i> 
+            <span>Log Out</span>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <div class="main-content" id="mainContent">
+
+        <!-- ============================================================
+        TOP BAR
+        ============================================================ -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <!-- Menu Toggle Button -->
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo-text">
+                    <img src="images/logo.png" alt="UWU" />
+                    <span>UWU Cafeteria Pre-order System</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <!-- Bell Icon with Notification Badge -->
+                <div class="bell-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <!-- Staff Profile -->
+                <div class="staff-profile">
+                    <img src="images/staff.jpg" alt="Staff" />
+                    <span>Kitchen Staff</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        PAGE HEADER
+        ============================================================ -->
+        <div class="page-header">
+            <h1>Meal Preparation</h1>
+            <p class="subtitle">View and manage meal preparation</p>
+        </div>
+
+        <!-- ============================================================
+        SEARCH BAR (Food Chips ඉවත් කරලා)
+        ============================================================ -->
+        <div class="search-filter-bar">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchPrepInput" placeholder="Search by Food Item or Order ID..." />
+            </div>
+            <div class="filter-wrapper">
+                <i class="fas fa-filter filter-icon"></i>
+                <select id="statusFilterSelect">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="cooking">Cooking</option>
+                    <option value="ready">Ready</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        MEAL PREPARATION TABLE
+        ============================================================ -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food Item</th>
+                        <th>Total Orders</th>
+                        <th>Preparing</th>
+                        <th>Ready</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="mealPrepTableBody">
+                    <!-- Data populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ============================================================
+        PREPARATION GUIDE
+        ============================================================ -->
+        <div class="prep-guide">
+            <h3>
+                <i class="fas fa-book-open"></i>
+                Preparation Guide
+            </h3>
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="step-number">1</div>
+                    <h4> Receive Order</h4>
+                    <p>New orders will appear in Orders page</p>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">2</div>
+                    <h4> Prepare the Meal</h4>
+                    <p>Update status to "Cooking" when you start</p>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">3</div>
+                    <h4>Mark as Ready</h4>
+                    <p>Once completed, mark as "Ready"</p>
+                </div>
+            </div>
+            
+            <div class="prep-note">
+                <i class="fas fa-clock"></i>
+                <p><strong>Note:</strong> Please ensure all orders are completed before the pickup time.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script src="script.js"></script>
+</body>
+</html>

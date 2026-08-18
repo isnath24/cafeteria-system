@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UWU Cafeteria - Kitchen Dashboard</title>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ============================================================
+    SIDEBAR / MENU BAR
+    ============================================================ -->
+    <nav class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="sidebar-logo">
+            <img src="images/logo.png" alt="UWU Logo" />
+            <span>UWU Cafeteria<br /><small style="font-weight:400;font-size:12px;opacity:0.7;">Pre-order System</small></span>
+        </div>
+
+        <!-- Menu Items with Navigation Links -->
+        <ul class="sidebar-menu">
+            <!-- Dashboard Link (Active) -->
+            <li class="active" data-page="dashboard">
+                <i class="fas fa-th-large"></i> 
+                <a href="index.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Dashboard
+                </a>
+            </li>
+            
+            <!-- Orders Link -->
+            <li data-page="orders">
+                <i class="fas fa-clipboard-list"></i> 
+                <a href="orders.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Orders
+                </a>
+            </li>
+            
+            <!-- Meal Preparation Link -->
+            <li data-page="meal-prep">
+                <i class="fas fa-utensils"></i> 
+                <a href="meal-prep.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Meal Preparation
+                </a>
+            </li>
+            
+            <!-- Stock Management Link -->
+            <li data-page="stock">
+                <i class="fas fa-boxes"></i> 
+                <a href="stock.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Stock Management
+                </a>
+            </li>
+            
+            <!-- Low Stock Alert Link -->
+            <li data-page="low-stock">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <a href="low-stock.html" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:14px;width:100%;">
+                    Low Stock Alert
+                </a>
+            </li>
+        </ul>
+
+        <!-- Logout Button -->
+        <div class="sidebar-logout">
+            <i class="fas fa-sign-out-alt"></i> 
+            <span>Log Out</span>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <div class="main-content" id="mainContent">
+
+        <!-- ============================================================
+        TOP BAR
+        ============================================================ -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <!-- Menu Toggle Button -->
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo-text">
+                    <img src="images/logo.png" alt="UWU" />
+                    <span>UWU Cafeteria Pre-order System</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <!-- Bell Icon with Notification Badge -->
+                <div class="bell-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <!-- Staff Profile -->
+                <div class="staff-profile">
+                    <img src="images/staff.jpg" alt="Staff" />
+                    <span>Kitchen Staff</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        WELCOME BAR
+        ============================================================ -->
+        <div class="welcome-bar">
+            <h2>
+                Dashboard
+                <small>Welcome back!</small>
+            </h2>
+            <div class="datetime" id="datetimeDisplay">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="date-part" id="datePart">2026-08-02</span>
+                <i class="fas fa-clock"></i>
+                <span id="timePart">22:51:58</span>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        STAT CARDS
+        ============================================================ -->
+        <div class="stats-grid" id="statsGrid">
+            <!-- Card 1: Orders (Today) -->
+            <div class="stat-card">
+                <div class="icon blue"><i class="fas fa-shopping-cart"></i></div>
+                <div class="info">
+                    <h4>Orders (Today)</h4>
+                    <div class="number" id="ordersToday">35</div>
+                </div>
+            </div>
+            <!-- Card 2: Pending Orders -->
+            <div class="stat-card">
+                <div class="icon orange"><i class="fas fa-clock"></i></div>
+                <div class="info">
+                    <h4>Pending Orders</h4>
+                    <div class="number" id="pendingOrders">10</div>
+                </div>
+            </div>
+            <!-- Card 3: Preparing Orders -->
+            <div class="stat-card">
+                <div class="icon green"><i class="fas fa-spinner"></i></div>
+                <div class="info">
+                    <h4>Preparing Orders</h4>
+                    <div class="number" id="preparingOrders">8</div>
+                </div>
+            </div>
+            <!-- Card 4: Ready Orders -->
+            <div class="stat-card">
+                <div class="icon purple"><i class="fas fa-check-circle"></i></div>
+                <div class="info">
+                    <h4>Ready Orders</h4>
+                    <div class="number" id="readyOrders">17</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        TWO-COLUMN: Recent Orders + Pie Chart
+        ============================================================ -->
+        <div class="two-col">
+            <!-- Recent Orders Table -->
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <h3>Recent Orders</h3>
+                    <a href="orders.html" id="viewAllOrders">View All →</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Student</th>
+                            <th>Food Item</th>
+                            <th>Qty</th>
+                            <th>Pickup Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentOrdersBody">
+                        <!-- Data populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pie Chart: Orders by Status -->
+            <div class="pie-wrapper">
+                <h3>Orders by Status</h3>
+                <div class="pie-container">
+                    <div class="pie-chart" id="pieChart">
+                        <div class="center-text">
+                            49%
+                            <small>Pending</small>
+                        </div>
+                    </div>
+                    <div class="pie-legend">
+                        <span><span class="dot pending-dot"></span> Pending (49%)</span>
+                        <span><span class="dot preparing-dot"></span> Preparing (23%)</span>
+                        <span><span class="dot ready-dot"></span> Ready (28%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        BOTTOM ROW: Today's Schedule + Low Stock
+        ============================================================ -->
+        <div class="bottom-row">
+            <!-- Today's Schedule -->
+            <div class="schedule-wrapper">
+                <h3>Today's Schedule</h3>
+                <div id="scheduleList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Low Stock Alerts -->
+            <div class="stock-wrapper">
+                <h3>
+                    Low Stock Alerts
+                    <a href="low-stock.html" id="viewAllStock">View All →</a>
+                </h3>
+                <div id="stockList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT (Shared with all pages)
+    ============================================================ -->
+    <script src="script.js"></script>
+</body>
+</html>
