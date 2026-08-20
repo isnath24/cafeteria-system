@@ -25,7 +25,7 @@ $msg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
     $order_id   = (int)$_POST['order_id'];
     $new_status = $_POST['new_status'] ?? '';
-    $allowed    = ['Pending', 'Processing', 'Ready', 'Completed'];
+    $allowed    = ['Pending', 'Processing', 'Ready'];
 
     if (in_array($new_status, $allowed)) {
         $stmt_user = mysqli_prepare($conn, 'SELECT user_id, order_status FROM orders WHERE id = ?');
@@ -295,7 +295,6 @@ if ($filter !== 'All') {
                     <option value="Pending">Pending</option>
                     <option value="Processing">Cooking</option>
                     <option value="Ready">Ready</option>
-                    <option value="Completed">Completed</option>
                 </select>
                 <div style="display:flex; gap:10px; justify-content:flex-end;">
                     <button type="button" onclick="document.getElementById('statusModal').style.display='none'" style="padding:8px 16px; border:1px solid #ddd; border-radius:6px; background:white; cursor:pointer;">Cancel</button>

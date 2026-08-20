@@ -1,4 +1,5 @@
 <?php
+
 /**
  * stripe_success.php — Verify Stripe payment & create order in DB.
  * Stripe redirects here after a successful card payment.
@@ -61,7 +62,8 @@ $service_fee = 20.00;
 $grand_total = $total + $service_fee;
 
 // ── 5. Insert order ───────────────────────────────────────────
-$ord = mysqli_prepare($conn,
+$ord = mysqli_prepare(
+    $conn,
     'INSERT INTO orders (user_id, total_amount, payment_method, order_status) VALUES (?,?,\'Card\',\'Pending\')'
 );
 mysqli_stmt_bind_param($ord, 'id', $user_id, $grand_total);
@@ -76,7 +78,8 @@ foreach ($_SESSION['cart'] as $item) {
     $qty        = $item['qty'];
     $unit_price = $item['price'];
 
-    $oi = mysqli_prepare($conn,
+    $oi = mysqli_prepare(
+        $conn,
         'INSERT INTO order_items (order_id, food_item_id, quantity, unit_price, subtotal) VALUES (?,?,?,?,?)'
     );
     mysqli_stmt_bind_param($oi, 'iiidd', $order_id, $food_id_it, $qty, $unit_price, $subtotal);
@@ -84,7 +87,8 @@ foreach ($_SESSION['cart'] as $item) {
     mysqli_stmt_close($oi);
 
     // Deduct inventory
-    $inv = mysqli_prepare($conn,
+    $inv = mysqli_prepare(
+        $conn,
         'UPDATE inventory SET quantity = GREATEST(0, quantity - ?) WHERE food_item_id = ?'
     );
     mysqli_stmt_bind_param($inv, 'ii', $qty, $food_id_it);
@@ -93,13 +97,21 @@ foreach ($_SESSION['cart'] as $item) {
 }
 
 // ── 7. Insert payment record (Paid) with Stripe session ID ────
-$pay = mysqli_prepare($conn,
+$pay = mysqli_prepare(
+    $conn,
     'INSERT INTO payments (order_id, payment_method, amount, payment_status, stripe_session_id)
      VALUES (?,\'Card\',?,\'Paid\',?)'
 );
 mysqli_stmt_bind_param($pay, 'ids', $order_id, $grand_total, $session_id);
 mysqli_stmt_execute($pay);
 mysqli_stmt_close($pay);
+
+// ── 7b. Generate a unique QR code token for pickup verification ──
+$qr_token = bin2hex(random_bytes(20));
+$qr_ins = mysqli_prepare($conn, 'INSERT INTO qr_codes (order_id, qr_token) VALUES (?, ?)');
+mysqli_stmt_bind_param($qr_ins, 'is', $order_id, $qr_token);
+mysqli_stmt_execute($qr_ins);
+mysqli_stmt_close($qr_ins);
 
 // ── 8. Clear cart & redirect ──────────────────────────────────
 $_SESSION['cart'] = [];

@@ -27,8 +27,11 @@
     <li <?= (basename($_SERVER['PHP_SELF']) === 'reports.php')    ? 'class="active"' : '' ?>>
       <a href="reports.php"><img src="images/reports.png" alt="Reports"><span>Reports</span></a>
     </li>
-    <li <?= (basename($_SERVER['PHP_SELF']) === 'users.php')      ? 'class="active"' : '' ?>>
+        <li <?= (basename($_SERVER['PHP_SELF']) === 'users.php')      ? 'class="active"' : '' ?>>
       <a href="users.php"><img src="images/users.png" alt="Users"><span>Users</span></a>
+    </li>
+    <li <?= (basename($_SERVER['PHP_SELF']) === 'verify_qr.php')  ? 'class="active"' : '' ?>>
+      <a href="verify_qr.php"><img src="images/orders.png" alt="Verify"><span>Verify Pickup</span></a>
     </li>
   </ul>
 

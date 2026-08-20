@@ -13,7 +13,7 @@ $msg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
   $order_id  = (int)$_POST['order_id'];
   $new_status = $_POST['new_status'] ?? '';
-  $allowed   = ['Pending', 'Processing', 'Ready', 'Completed'];
+  $allowed   = ['Pending', 'Processing', 'Ready'];
 
   if (in_array($new_status, $allowed)) {
     // Fetch the user_id and current status for this order
@@ -275,7 +275,6 @@ if ($params) {
           <option value="Pending">Pending</option>
           <option value="Processing">Processing</option>
           <option value="Ready">Ready</option>
-          <option value="Completed">Completed</option>
         </select>
         <div class="modal-buttons" style="margin-top:14px;">
           <button type="button" onclick="document.getElementById('statusModal').classList.remove('show')">Cancel</button>
