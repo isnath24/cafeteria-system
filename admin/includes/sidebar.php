@@ -1,3 +1,26 @@
+<style>
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: -280px !important;
+    width: 280px;
+    height: 100%;
+    transition: left 0.3s ease !important;
+    z-index: 1000;
+  }
+
+  .sidebar.show-sidebar {
+    left: 0 !important;
+  }
+
+  .main-content {
+    transition: margin-left 0.3s ease;
+  }
+
+  .sidebar.show-sidebar~.main-content {
+    margin-left: 280px !important;
+  }
+</style>
 <!-- admin/includes/sidebar.php — Shared admin sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="logo-area">
@@ -27,7 +50,7 @@
     <li <?= (basename($_SERVER['PHP_SELF']) === 'reports.php')    ? 'class="active"' : '' ?>>
       <a href="reports.php"><img src="images/reports.png" alt="Reports"><span>Reports</span></a>
     </li>
-        <li <?= (basename($_SERVER['PHP_SELF']) === 'users.php')      ? 'class="active"' : '' ?>>
+    <li <?= (basename($_SERVER['PHP_SELF']) === 'users.php')      ? 'class="active"' : '' ?>>
       <a href="users.php"><img src="images/users.png" alt="Users"><span>Users</span></a>
     </li>
     <li <?= (basename($_SERVER['PHP_SELF']) === 'verify_qr.php')  ? 'class="active"' : '' ?>>

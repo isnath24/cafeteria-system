@@ -141,20 +141,28 @@ $service_fee = 20.00;
 $total       = $subtotal + $service_fee;
 $item_count  = array_sum(array_column($_SESSION['cart'], 'qty'));
 
-// ── Fetch today's remaining pickup slots with live crowd levels ──
-$slots_sql = "SELECT ps.id, ps.start_time, ps.end_time, ps.meal_period, ps.max_orders,
-                     COALESCE(booked.n, 0) AS booked_count
-              FROM pickup_slots ps
-              LEFT JOIN (
-                  SELECT pickup_slot_id, COUNT(*) AS n FROM orders
-                  WHERE DATE(created_at) = CURDATE() AND pickup_slot_id IS NOT NULL
-                  GROUP BY pickup_slot_id
-              ) booked ON booked.pickup_slot_id = ps.id
-              WHERE ps.is_active = 1 AND ps.end_time > CURTIME()
-              ORDER BY ps.start_time";
-$slots_result = mysqli_query($conn, $slots_sql);
+// ── Fetch today's remaining pickup slots for the CURRENT meal period only ──
+$current_period = current_meal_period(); // e.g. 'Breakfast', 'Lunch', 'Dinner', or null if closed
+
 $slots = [];
-while ($s = mysqli_fetch_assoc($slots_result)) {
+if ($current_period) {
+  $slots_stmt = mysqli_prepare($conn, "SELECT ps.id, ps.start_time, ps.end_time, ps.meal_period, ps.max_orders,
+                         COALESCE(booked.n, 0) AS booked_count
+                  FROM pickup_slots ps
+                  LEFT JOIN (
+                      SELECT pickup_slot_id, COUNT(*) AS n FROM orders
+                      WHERE DATE(created_at) = CURDATE() AND pickup_slot_id IS NOT NULL
+                      GROUP BY pickup_slot_id
+                  ) booked ON booked.pickup_slot_id = ps.id
+                  WHERE ps.is_active = 1 AND ps.end_time > CURTIME() AND ps.meal_period = ?
+                  ORDER BY ps.start_time");
+  mysqli_stmt_bind_param($slots_stmt, 's', $current_period);
+  mysqli_stmt_execute($slots_stmt);
+  $slots_result = mysqli_stmt_get_result($slots_stmt);
+} else {
+  $slots_result = null;
+}
+while ($slots_result && $s = mysqli_fetch_assoc($slots_result)) {
   $pct = $s['max_orders'] > 0 ? ($s['booked_count'] / $s['max_orders']) : 0;
   if ($pct >= 0.8) {
     $s['crowd_color'] = '🔴';
