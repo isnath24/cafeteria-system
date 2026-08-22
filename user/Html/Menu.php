@@ -7,7 +7,6 @@ require_once '../../config.php';
 require_once '../../db.php';
 require_student();
 
-
 // ── Determine current meal period ─────────────────────────────
 // current_meal_period() is already defined in config.php
 $meal_period = current_meal_period();

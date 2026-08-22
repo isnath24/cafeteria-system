@@ -33,12 +33,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   // ── PLACE ORDER ───────────────────────────────────────────
   if ($action === 'place_order' && !empty($_SESSION['cart'])) {
-    $payment_method = $_POST['payment'] === 'card' ? 'Card' : 'Cash';
-    $user_id        = $_SESSION['user_id'];
+    $payment_method  = $_POST['payment'] === 'card' ? 'Card' : 'Cash';
+    $user_id         = $_SESSION['user_id'];
+    $pickup_slot_id  = (int)($_POST['pickup_slot_id'] ?? 0);
+
+    // ── Validate the pickup slot (must exist, be active, and have room) ──
+    $slot_stmt = mysqli_prepare($conn, "SELECT id, max_orders FROM pickup_slots WHERE id = ? AND is_active = 1");
+    mysqli_stmt_bind_param($slot_stmt, 'i', $pickup_slot_id);
+    mysqli_stmt_execute($slot_stmt);
+    $slot = mysqli_fetch_assoc(mysqli_stmt_get_result($slot_stmt));
+
+    if (!$slot) {
+      header('Location: Cart.php?slot_error=1');
+      exit;
+    }
+
+    $count_stmt = mysqli_prepare($conn, "SELECT COUNT(*) AS n FROM orders WHERE pickup_slot_id = ? AND DATE(created_at) = CURDATE()");
+    mysqli_stmt_bind_param($count_stmt, 'i', $pickup_slot_id);
+    mysqli_stmt_execute($count_stmt);
+    $booked = mysqli_fetch_assoc(mysqli_stmt_get_result($count_stmt))['n'];
+
+    if ($booked >= $slot['max_orders']) {
+      header('Location: Cart.php?slot_full=1');
+      exit;
+    }
 
     // ── Card payment → redirect to Stripe Checkout ─────────
     if ($payment_method === 'Card') {
-      // Cart stays in session; stripe_checkout.php reads it
+      $_SESSION['pending_pickup_slot_id'] = $pickup_slot_id; // carried through to stripe_success.php
       header('Location: stripe_checkout.php');
       exit;
     }
@@ -55,9 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert order
     $ord_stmt = mysqli_prepare(
       $conn,
-      'INSERT INTO orders (user_id, total_amount, payment_method, order_status) VALUES (?,?,?,"Pending")'
+      'INSERT INTO orders (user_id, pickup_slot_id, total_amount, payment_method, order_status) VALUES (?,?,?,?,"Pending")'
     );
-    mysqli_stmt_bind_param($ord_stmt, 'ids', $user_id, $grand_total, $payment_method);
+    mysqli_stmt_bind_param($ord_stmt, 'iids', $user_id, $pickup_slot_id, $grand_total, $payment_method);
     mysqli_stmt_execute($ord_stmt);
     $order_id = mysqli_insert_id($conn);
     mysqli_stmt_close($ord_stmt);
@@ -122,6 +144,43 @@ foreach ($_SESSION['cart'] as $item) {
 $service_fee = 20.00;
 $total       = $subtotal + $service_fee;
 $item_count  = array_sum(array_column($_SESSION['cart'], 'qty'));
+
+// ── Fetch today's remaining pickup slots for the CURRENT meal period only ──
+$current_period = current_meal_period(); // e.g. 'Breakfast', 'Lunch', 'Dinner', or null if closed
+
+$slots = [];
+if ($current_period) {
+  $slots_stmt = mysqli_prepare($conn, "SELECT ps.id, ps.start_time, ps.end_time, ps.meal_period, ps.max_orders,
+                         COALESCE(booked.n, 0) AS booked_count
+                  FROM pickup_slots ps
+                  LEFT JOIN (
+                      SELECT pickup_slot_id, COUNT(*) AS n FROM orders
+                      WHERE DATE(created_at) = CURDATE() AND pickup_slot_id IS NOT NULL
+                      GROUP BY pickup_slot_id
+                  ) booked ON booked.pickup_slot_id = ps.id
+                  WHERE ps.is_active = 1 AND ps.end_time > CURTIME() AND ps.meal_period = ?
+                  ORDER BY ps.start_time");
+  mysqli_stmt_bind_param($slots_stmt, 's', $current_period);
+  mysqli_stmt_execute($slots_stmt);
+  $slots_result = mysqli_stmt_get_result($slots_stmt);
+} else {
+  $slots_result = null;
+}
+while ($slots_result && $s = mysqli_fetch_assoc($slots_result)) {
+  $pct = $s['max_orders'] > 0 ? ($s['booked_count'] / $s['max_orders']) : 0;
+  if ($pct >= 0.8) {
+    $s['crowd_color'] = '🔴';
+    $s['crowd_label'] = 'High';
+  } elseif ($pct >= 0.5) {
+    $s['crowd_color'] = '🟡';
+    $s['crowd_label'] = 'Medium';
+  } else {
+    $s['crowd_color'] = '🟢';
+    $s['crowd_label'] = 'Low';
+  }
+  $s['full'] = $s['booked_count'] >= $s['max_orders'];
+  $slots[] = $s;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -292,6 +351,7 @@ $item_count  = array_sum(array_column($_SESSION['cart'], 'qty'));
     <main class="cart-main-content">
       <div class="cart-inner">
         <!-- Cart Items -->
+
         <section class="cart-panel">
           <?php
           // ── Show Stripe error / cancellation banners ─────────
@@ -380,9 +440,32 @@ $item_count  = array_sum(array_column($_SESSION['cart'], 'qty'));
           </section>
 
           <section class="payment-box">
-            <h2>Payment Method</h2>
+            <h2>Pickup Slot</h2>
             <form method="POST" action="Cart.php" id="orderForm">
               <input type="hidden" name="action" value="place_order">
+
+              <?php if (isset($_GET['slot_full'])): ?>
+                <p style="color:#dc2626; font-size:13px; margin-bottom:10px;">That slot just filled up — please pick another.</p>
+              <?php elseif (isset($_GET['slot_error'])): ?>
+                <p style="color:#dc2626; font-size:13px; margin-bottom:10px;">Please select a valid pickup slot.</p>
+              <?php endif; ?>
+
+              <?php if (empty($slots)): ?>
+                <p style="color:#6b7280; font-size:13px;">No pickup slots available right now.</p>
+              <?php else: ?>
+                <select name="pickup_slot_id" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-bottom:16px;">
+                  <option value="" disabled selected>Select a pickup time</option>
+                  <?php foreach ($slots as $s): ?>
+                    <option value="<?= $s['id'] ?>" <?= $s['full'] ? 'disabled' : '' ?>>
+                      <?= date('h:i A', strtotime($s['start_time'])) ?> – <?= date('h:i A', strtotime($s['end_time'])) ?>
+                      (<?= $s['meal_period'] ?>) <?= $s['crowd_color'] ?> <?= $s['crowd_label'] ?><?= $s['full'] ? ' — FULL' : '' ?>
+                      [<?= $s['booked_count'] ?>/<?= $s['max_orders'] ?>]
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+              <?php endif; ?>
+
+              <h2>Payment Method</h2>
               <label class="payment-option">
                 <input type="radio" name="payment" value="cash" />
                 <span class="radio-dot"></span><strong>Cash on pickup</strong>
