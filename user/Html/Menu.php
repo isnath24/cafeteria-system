@@ -9,14 +9,6 @@ require_student();
 
 // ── Determine current meal period based on server time ─────────
 // Breakfast: 6:00–11:59, Lunch: 12:00–17:59, Dinner: 18:00–20:59, else closed
-function current_meal_period(): ?string
-{
-  $hour = (int)date('G');
-  if ($hour >= 6  && $hour < 12) return 'Breakfast';
-  if ($hour >= 12 && $hour < 18) return 'Lunch';
-  if ($hour >= 18 && $hour < 21) return 'Dinner';
-  return null; // Cafeteria closed
-}
 $meal_period = current_meal_period();
 
 // ── ADD TO CART (POST) ────────────────────────────────────────

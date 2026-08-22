@@ -5,6 +5,9 @@
  * Include this at the TOP of every protected page.
  */
 
+// Set the correct timezone for Sri Lanka (fixes meal-period time checks)
+date_default_timezone_set('Asia/Colombo');
+
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
