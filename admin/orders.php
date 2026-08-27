@@ -160,6 +160,21 @@ if ($params) {
         <p>Manage &amp; track all orders.</p>
       </div>
 
+      <div style="margin: 20px 0;">
+        <a href="scan_qr.php"
+          style="display:inline-flex;
+              align-items:center;
+              gap:8px;
+              padding:12px 18px;
+              background:#7047f2;
+              color:white;
+              border-radius:8px;
+              text-decoration:none;
+              font-weight:600;">
+          📷 Scan Pickup QR
+        </a>
+      </div>
+
 
 
       <!-- Status Tabs -->

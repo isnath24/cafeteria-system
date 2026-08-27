@@ -5,6 +5,7 @@
  */
 require_once '../../config.php';
 require_once '../../db.php';
+require_once '../../vendor/autoload.php';
 require_student();
 
 $user_id  = $_SESSION['user_id'];
@@ -56,6 +57,21 @@ if ($order) {
   mysqli_stmt_bind_param($qstmt, 'i', $order['id']);
   mysqli_stmt_execute($qstmt);
   $qr = mysqli_fetch_assoc(mysqli_stmt_get_result($qstmt));
+}
+
+$qr_image = null;
+
+if ($qr && !empty($qr['qr_token'])) {
+    $qrCode = new \Endroid\QrCode\QrCode(
+        data: $qr['qr_token'],
+        size: 220,
+        margin: 10
+    );
+
+    $writer = new \Endroid\QrCode\Writer\PngWriter();
+    $result = $writer->write($qrCode);
+
+    $qr_image = $result->getDataUri();
 }
 
 // Status step mapping
@@ -347,10 +363,9 @@ $current_step = $order ? ($steps[$order['order_status']] ?? 1) : 0;
                   </div>
                 <?php else: ?>
                   <h3 style="margin-bottom:12px;">Show this QR code at pickup</h3>
-                  <img
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=<?= urlencode($qr['qr_token']) ?>"
-                    alt="Pickup QR Code"
-                    style="border:1px solid #e5e7eb; border-radius:8px; padding:10px;">
+                 <img src="<?= e($qr_image) ?>"
+                  alt="Pickup QR Code"
+                  style="border:1px solid #e5e7eb; border-radius:8px; padding:10px;">
                   <p style="color:#6b7280; font-size:13px; margin-top:12px;">Cafeteria staff will scan this to confirm your pickup.</p>
                 <?php endif; ?>
               </div>
