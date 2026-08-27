@@ -2,49 +2,10 @@
 // user/Html/includes/sidebar.php — Shared student sidebar
 $current = basename($_SERVER['PHP_SELF']);
 ?>
-<button id="studentMenuToggle" style="position:fixed; top:16px; left:16px; z-index:1100; width:42px; height:42px; border-radius:10px; border:none; background:#0a1a3a; color:white; font-size:18px; cursor:pointer;">
-  <i class="fa-solid fa-bars"></i>
-</button>
 
-<style>
-  .sidebar {
-    position: fixed !important;
-    top: 0;
-    left: -280px !important;
-    height: 100%;
-    transition: left 0.3s ease !important;
-    z-index: 1000;
-  }
+<!-- Toggle button is inserted into the page header by JS below, not floated on top of content -->
 
-  .sidebar.show-sidebar {
-    left: 0 !important;
-  }
-
-  .main-content,
-  .menu-content,
-  .cart-main-content {
-    transition: margin-left 0.3s ease;
-  }
-
-  .sidebar.show-sidebar~.main-content,
-  .sidebar.show-sidebar~.menu-content,
-  .sidebar.show-sidebar~.cart-main-content {
-    margin-left: 280px !important;
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var btn = document.getElementById('studentMenuToggle');
-    var sb = document.querySelector('.sidebar');
-    if (btn && sb) {
-      btn.addEventListener('click', function() {
-        sb.classList.toggle('show-sidebar');
-      });
-    }
-  });
-</script>
-<aside class="sidebar">
+<aside class="sidebar" style="display:flex; flex-direction:column;">
   <div class="brand">
     <img src="../Images/logo.png" alt="Cafeteria logo" />
     <div>
@@ -60,8 +21,10 @@ $current = basename($_SERVER['PHP_SELF']);
     <a href="Payments.php" <?= $current === 'Payments.php'    ? 'class="active"' : '' ?>><i class="fa-solid fa-credit-card"></i> Payments</a>
     <a href="Profile.php" <?= $current === 'Profile.php'     ? 'class="active"' : '' ?>><i class="fa-solid fa-user"></i> Profile</a>
     <a href="CrowdStatus.php" <?= $current === 'CrowdStatus.php' ? 'class="active"' : '' ?>><i class="fa-solid fa-chart-simple"></i> Crowd Status</a>
-    <a href="../../logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
   </nav>
+  <div style="margin-top:auto; border-top:1px solid rgba(255,255,255,0.15); padding-top:14px;">
+    <a href="../../logout.php" style="color:#ffffff !important; text-decoration:none;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+  </div>
 </aside>
 
 <!-- Notifications System JS/CSS (Shared) -->
@@ -169,6 +132,49 @@ $current = basename($_SERVER['PHP_SELF']);
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+
+    // ── Sidebar hamburger toggle (inline icon, aligned with the page title — matches admin style) ──
+    var sb = document.querySelector('.sidebar');
+    var header = document.querySelector('header.dashboard-header, header.menu-header, .cart-header');
+    var SIDEBAR_WIDTH = 200; // px — sidebar width and content push amount, kept in sync
+
+    if (sb && header) {
+      // Insert the icon as the FIRST child of the header itself (not inside the title's own div),
+      // so it sits to the left of "Welcome back..." without disturbing the heading/subtitle stacking
+      var menuBtn = document.createElement('i');
+      menuBtn.className = 'fa-solid fa-bars';
+      menuBtn.style.cssText = 'cursor:pointer; font-size:22px; margin-right:16px; color:#111827; flex-shrink:0;';
+
+      header.style.display = 'flex';
+      header.style.alignItems = 'left';
+      header.insertBefore(menuBtn, header.firstChild);
+
+      var isOpen = false;
+      var contentEl = sb.parentElement ? sb.parentElement.lastElementChild : null;
+
+      function applySidebarState() {
+        sb.style.setProperty('left', isOpen ? '0px' : (-SIDEBAR_WIDTH) + 'px', 'important');
+        if (contentEl) {
+          contentEl.style.setProperty('transition', 'margin-left 0.3s ease', 'important');
+          contentEl.style.setProperty('margin-left', isOpen ? SIDEBAR_WIDTH + 'px' : '0px', 'important');
+        }
+      }
+
+      sb.style.setProperty('position', 'fixed', 'important');
+      sb.style.setProperty('top', '0px', 'important');
+      sb.style.setProperty('width', SIDEBAR_WIDTH + 'px', 'important');
+      sb.style.setProperty('height', '100%', 'important');
+      sb.style.setProperty('transition', 'left 0.3s ease', 'important');
+      sb.style.setProperty('z-index', '999998', 'important');
+      applySidebarState();
+
+      menuBtn.addEventListener('click', function() {
+        isOpen = !isOpen;
+        applySidebarState();
+      });
+    }
+
+    // ── Notifications ──────────────────────────────────────────
     var bellIcon = document.querySelector('.fa-bell');
     if (!bellIcon) return;
 
