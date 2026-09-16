@@ -177,6 +177,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['qr_token'])) {
         </script>
     <?php endif; ?>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const menuIcon = document.querySelector('.menu-icon');
+            const sidebar = document.querySelector('.sidebar');
+
+            if (menuIcon && sidebar) {
+
+                menuIcon.addEventListener('click', function () {
+                sidebar.classList.toggle('show-sidebar');
+                });
+
+            }
+
+        });
+</script>
+
 </body>
 
 </html>
