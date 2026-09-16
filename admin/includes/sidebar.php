@@ -22,7 +22,7 @@
   }
 </style>
 <!-- admin/includes/sidebar.php — Shared admin sidebar -->
-<div class="sidebar" id="sidebar">
+<div class="sidebar" id="sidebar" style="background-color:#111827 !important;">
   <div class="logo-area">
     <img src="<?= isset($base) ? $base : '' ?>images/logo.png" alt="Cafeteria Logo">
     <div class="logo-text">

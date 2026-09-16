@@ -17,6 +17,9 @@ if (session_status() === PHP_SESSION_NONE) {
 // Absolute path to the project root (the folder containing db.php)
 define('ROOT_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
+if (file_exists(ROOT_PATH . 'vendor/autoload.php')) {
+    require_once ROOT_PATH . 'vendor/autoload.php';
+}
 // ── Auth guard: admin pages ───────────────────────────────────
 function require_admin()
 {

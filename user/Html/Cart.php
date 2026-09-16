@@ -5,7 +5,7 @@
  */
 require_once '../../config.php';
 require_once '../../db.php';
-require_once '../../vendor/autoload.php';
+
 require_student();
 
 
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_close($qr_ins);
 
     //Generate QR code image
-    
+
     // Clear cart
     $_SESSION['cart'] = [];
     header('Location: TrackOrders.php?order_id=' . $order_id);

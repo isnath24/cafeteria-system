@@ -5,7 +5,7 @@ $current = basename($_SERVER['PHP_SELF']);
 
 <!-- Toggle button is inserted into the page header by JS below, not floated on top of content -->
 
-<aside class="sidebar" style="display:flex; flex-direction:column;">
+<aside class="sidebar" style="display:flex; flex-direction:column; background-color:#111827 !important;">
   <div class="brand">
     <img src="../Images/logo.png" alt="Cafeteria logo" />
     <div>
