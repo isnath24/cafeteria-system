@@ -653,6 +653,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['qr_token'])) {
     <?php endif; ?>
 
 
+    <script src="script.js?v=<?= time() ?>"></script>
+
 </body>
 
 </html>
