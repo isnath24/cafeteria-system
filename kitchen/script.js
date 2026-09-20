@@ -1129,75 +1129,10 @@ function syncDashboardFromOrders() {
 // ============================================================
 
 function initializePage() {
-    const hasDashboard = document.getElementById('statsGrid') !== null;
-    const hasOrders = document.getElementById('ordersTableBody') !== null;
-    const hasMealPrep = document.getElementById('mealPrepTableBody') !== null;
-    const hasStock = document.getElementById('stockTableBody') !== null;
-    const hasLowStock = document.getElementById('lowStockTableBody') !== null;
-    
-    if (hasDashboard) {
-        initDashboard();
-        
-        setTimeout(() => {
-            console.log('🔄 Simulating backend data update...');
-            const newData = {
-                stats: {
-                    ordersToday: 42,
-                    pending: 12,
-                    preparing: 15,
-                    ready: 15
-                },
-                recentOrders: [
-                    { id: '#0006', student: 'Amara Perera', item: 'Rice & Curry', qty: 2, time: '02:00 PM', status: 'Pending' },
-                    { id: '#0007', student: 'Nadun Fernando', item: 'Kottu', qty: 1, time: '02:15 PM', status: 'Preparing' },
-                    { id: '#0001', student: 'Nimal Perera', item: 'Rice & Curry', qty: 1, time: '12:30 PM', status: 'Ready' },
-                    { id: '#0002', student: 'Kasumi Fernando', item: 'Kottu', qty: 2, time: '12:45 PM', status: 'Ready' },
-                    { id: '#0003', student: 'Sahan Weerasinghe', item: 'Fried Rice', qty: 1, time: '01:00 PM', status: 'Ready' }
-                ],
-                schedule: [
-                    { item: 'Rice & Curry', count: 10 },
-                    { item: 'Kottu', count: 7 },
-                    { item: 'Fried Rice', count: 5 },
-                    { item: 'Noodles', count: 6 },
-                    { item: 'Egg Curry', count: 4 }
-                ],
-                stock: [
-                    { item: 'Chicken', qty: '3 kg' },
-                    { item: 'Eggs', qty: '5 Pieces' },
-                    { item: 'Vegetables', qty: '2 kg' },
-                    { item: 'Rice', qty: '8 kg' }
-                ]
-            };
-            updateDashboardData(newData);
-            console.log('✅ Dashboard updated with new data!');
-        }, 10000);
-    }
-    
-    if (hasOrders) {
-        initOrdersPage();
-    }
-    
-    if (hasMealPrep) {
-        initMealPrepPage();
-    }
-    
-    if (hasStock) {
-        initStockPage();
-    }
-    
-    if (hasLowStock) {
-        initLowStockPage();
-    }
-    
-    console.log('💡 Available commands:');
-    console.log('  - dashboardData - View dashboard data');
-    console.log('  - ordersData - View orders data');
-    console.log('  - mealPrepData - View meal prep data');
-    console.log('  - stockData - View stock data');
-    console.log('  - getLowStockItems() - Get low stock items');
-    console.log('  - updateDashboardData(newData) - Update dashboard with new data');
-    console.log('  - syncDashboardFromOrders() - Sync dashboard data from orders');
-    console.log('  - navigateTo(page) - Navigate to page');
+    // Disabled: this used to inject hardcoded mock data (fake student names, fake orders)
+    // into the same table IDs that our real PHP pages now render server-side.
+    // All 5 kitchen pages (dashboard, orders, meal-prep, stock, low-stock) now get
+    // their real data directly from the database via PHP — this function must do nothing.
 }
 
 // ============================================================
