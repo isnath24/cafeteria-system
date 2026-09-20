@@ -70,23 +70,7 @@ setInterval(updateDateTime, 1000);
 // ============================================================
 // 3. DASHBOARD DATA
 // ============================================================
-const dashboardData = {
-    stats: {
-        ordersToday: 35,
-        pending: 10,
-        preparing: 8,
-        ready: 17
-    },
-    recentOrders: [
-       
-    ],
-    schedule: [
-        
-    ],
-    stock: [
-       
-    ]
-};
+
 
 // ============================================================
 // 4. ORDERS DATA
@@ -147,19 +131,9 @@ let currentSearchQuery = '';
 // 10. DASHBOARD RENDER FUNCTIONS
 // ============================================================
 
-function renderStats() {
-    const ordersToday = document.getElementById('ordersToday');
-    const pendingOrders = document.getElementById('pendingOrders');
-    const preparingOrders = document.getElementById('preparingOrders');
-    const readyOrders = document.getElementById('readyOrders');
-    
-    if (ordersToday) ordersToday.textContent = dashboardData.stats.ordersToday;
-    if (pendingOrders) pendingOrders.textContent = dashboardData.stats.pending;
-    if (preparingOrders) preparingOrders.textContent = dashboardData.stats.preparing;
-    if (readyOrders) readyOrders.textContent = dashboardData.stats.ready;
-}
 
-function renderRecentOrders() {
+
+/*function renderRecentOrders() {
     const tbody = document.getElementById('recentOrdersBody');
     if (!tbody) return;
     
@@ -182,9 +156,9 @@ function renderRecentOrders() {
         `;
         tbody.appendChild(tr);
     });
-}
+}*/
 
-function renderPieChart() {
+/*function renderPieChart() {
     const pending = dashboardData.stats.pending;
     const preparing = dashboardData.stats.preparing;
     const ready = dashboardData.stats.ready;
@@ -245,7 +219,7 @@ function renderPieChart() {
             <span><span class="dot ready-dot"></span> Ready (${readyPct}%)</span>
         `;
     }
-}
+}*//*
 
 function renderSchedule() {
     const container = document.getElementById('scheduleList');
@@ -262,9 +236,9 @@ function renderSchedule() {
         `;
         container.appendChild(div);
     });
-}
+}*/
 
-function renderDashboardStock() {
+/*function renderDashboardStock() {
     const container = document.getElementById('stockList');
     if (!container) return;
     
@@ -279,16 +253,16 @@ function renderDashboardStock() {
         `;
         container.appendChild(div);
     });
-}
+}*/
 
-function initDashboard() {
+/*function initDashboard() {
     renderStats();
     renderRecentOrders();
     renderPieChart();
     renderSchedule();
     renderDashboardStock();
     console.log('✅ Dashboard initialized successfully!');
-}
+}*/
 
 // ============================================================
 // 11. ORDERS RENDER FUNCTIONS
@@ -355,7 +329,7 @@ function updateStatusCards() {
     if (completedCount) completedCount.textContent = stats.completed;
 }
 
-function renderOrders() {
+/*function renderOrders() {
     const tableBody = document.getElementById('ordersTableBody');
     if (!tableBody) return;
     
@@ -425,7 +399,7 @@ function renderOrders() {
             handleOrderAction(orderId, action);
         });
     });
-}
+}*/
 
 function handleOrderAction(orderId, action) {
     const order = ordersData.allOrders.find(o => o.id === orderId);
@@ -462,7 +436,7 @@ function updateOrdersStats() {
     ordersData.stats = stats;
 }
 
-function initOrdersPage() {
+/*function initOrdersPage() {
     updateStatusCards();
     renderOrders();
     
@@ -525,7 +499,7 @@ function initOrdersPage() {
     }
     
     console.log('✅ Orders page initialized successfully!');
-}
+}*/
 
 // ============================================================
 // 12. MEAL PREP RENDER FUNCTIONS
@@ -548,7 +522,7 @@ function getFilteredMealItems() {
     return filtered;
 }
 
-function renderMealPrepTable() {
+/*function renderMealPrepTable() {
     const tableBody = document.getElementById('mealPrepTableBody');
     if (!tableBody) return;
     
@@ -618,7 +592,7 @@ function renderMealPrepTable() {
             handleMealAction(itemId, action);
         });
     });
-}
+}*/
 
 function handleMealAction(itemId, action) {
     const item = mealPrepData.items.find(i => i.id === itemId);
@@ -645,7 +619,7 @@ function handleMealAction(itemId, action) {
     showNotification(message);
 }
 
-function initMealPrepPage() {
+/*function initMealPrepPage() {
     renderMealPrepTable();
     
     const searchInput = document.getElementById('searchPrepInput');
@@ -666,13 +640,13 @@ function initMealPrepPage() {
     }
     
     console.log('✅ Meal Preparation page initialized successfully!');
-}
+}*/
 
 // ============================================================
 // 13. STOCK MANAGEMENT RENDER FUNCTIONS
 // ============================================================
 
-function renderStockTable() {
+/*function renderStockTable() {
     const tableBody = document.getElementById('stockTableBody');
     if (!tableBody) return;
     
@@ -720,7 +694,7 @@ function renderStockTable() {
             openUpdateModal(itemId);
         });
     });
-}
+}*/
 
 function openUpdateModal(itemId) {
     const item = stockData.items.find(i => i.id === itemId);
@@ -868,7 +842,7 @@ function saveStockUpdate(itemId) {
     showNotification(`✅ Stock updated for ${item.foodItem} ${changeText}`);
 }
 
-function initStockPage() {
+/*function initStockPage() {
     renderStockTable();
     
     const updateStockBtn = document.getElementById('updateStockBtn');
@@ -889,13 +863,13 @@ function initStockPage() {
     }
     
     console.log('✅ Stock Management page initialized successfully!');
-}
+}*/
 
 // ============================================================
 // 14. LOW STOCK ALERT RENDER FUNCTIONS
 // ============================================================
 
-function renderLowStockTable() {
+/*function renderLowStockTable() {
     const tableBody = document.getElementById('lowStockTableBody');
     if (!tableBody) return;
     
@@ -949,12 +923,12 @@ function renderLowStockTable() {
             openUpdateModal(itemId);
         });
     });
-}
+}*/
 
-function initLowStockPage() {
+/*function initLowStockPage() {
     renderLowStockTable();
     console.log('✅ Low Stock Alert page initialized successfully!');
-}
+}*/
 
 // ============================================================
 // 15. NOTIFICATION FUNCTION
@@ -1066,7 +1040,7 @@ function updateDashboardData(newData) {
     renderDashboardStock();
 }
 
-function syncDashboardFromOrders() {
+/*function syncDashboardFromOrders() {
     const stats = {
         all: ordersData.allOrders.length,
         pending: ordersData.allOrders.filter(o => o.status === 'pending').length,
@@ -1085,7 +1059,7 @@ function syncDashboardFromOrders() {
         ...order,
         status: order.status.charAt(0).toUpperCase() + order.status.slice(1)
     }));
-}
+}*/
 
 // ============================================================
 // 20. INITIALIZE BASED ON CURRENT PAGE
@@ -1102,8 +1076,8 @@ function initializePage() {
 // 21. EXPOSE FUNCTIONS TO GLOBAL SCOPE
 // ============================================================
 
-window.dashboardData = dashboardData;
-window.ordersData = ordersData;
+//window.dashboardData = dashboardData;
+/*window.ordersData = ordersData;
 window.mealPrepData = mealPrepData;
 window.stockData = stockData;
 window.getLowStockItems = getLowStockItems;
@@ -1126,7 +1100,7 @@ window.handleMealAction = handleMealAction;
 window.openUpdateModal = openUpdateModal;
 window.closeModal = closeModal;
 window.saveStockUpdate = saveStockUpdate;
-window.showNotification = showNotification;
+window.showNotification = showNotification;*/
 
 // ============================================================
 // 22. START THE APPLICATION

@@ -134,7 +134,7 @@
                 <div class="icon blue"><i class="fas fa-shopping-cart"></i></div>
                 <div class="info">
                     <h4>Orders (Today)</h4>
-                    <div class="number" id="ordersToday">35</div>
+                    <div class="number" id="ordersToday"><?= $orders_today ?></div>
                 </div>
             </div>
             <!-- Card 2: Pending Orders -->
@@ -142,7 +142,7 @@
                 <div class="icon orange"><i class="fas fa-clock"></i></div>
                 <div class="info">
                     <h4>Pending Orders</h4>
-                    <div class="number" id="pendingOrders">10</div>
+                    <div class="number" id="pendingOrders"><?= $pending_orders ?></div>
                 </div>
             </div>
             <!-- Card 3: Preparing Orders -->
@@ -150,7 +150,7 @@
                 <div class="icon green"><i class="fas fa-spinner"></i></div>
                 <div class="info">
                     <h4>Preparing Orders</h4>
-                    <div class="number" id="preparingOrders">8</div>
+                    <div class="number" id="preparingOrders"><?= $preparing_orders ?></div>
                 </div>
             </div>
             <!-- Card 4: Ready Orders -->
@@ -158,7 +158,7 @@
                 <div class="icon purple"><i class="fas fa-check-circle"></i></div>
                 <div class="info">
                     <h4>Ready Orders</h4>
-                    <div class="number" id="readyOrders">17</div>
+                    <div class="number" id="readyOrders"><?= $ready_orders ?></div>
                 </div>
             </div>
         </div>
@@ -238,6 +238,6 @@
     <!-- ============================================================
     JAVASCRIPT (Shared with all pages)
     ============================================================ -->
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
