@@ -78,23 +78,13 @@ const dashboardData = {
         ready: 17
     },
     recentOrders: [
-        { id: '#0001', student: 'Nimal Perera', item: 'Rice & Curry', qty: 1, time: '12:30 PM', status: 'Pending' },
-        { id: '#0002', student: 'Kasumi Fernando', item: 'Kottu', qty: 2, time: '12:45 PM', status: 'Preparing' },
-        { id: '#0003', student: 'Sahan Weerasinghe', item: 'Fried Rice', qty: 1, time: '01:00 PM', status: 'Ready' },
-        { id: '#0004', student: 'Dilin Jayasekara', item: 'Noodles', qty: 1, time: '01:15 PM', status: 'Preparing' },
-        { id: '#0005', student: 'Tharindu Silva', item: 'Egg Curry', qty: 2, time: '01:30 PM', status: 'Pending' }
+       
     ],
     schedule: [
-        { item: 'Rice & Curry', count: 8 },
-        { item: 'Kottu', count: 5 },
-        { item: 'Fried Rice', count: 6 },
-        { item: 'Noodles', count: 4 },
-        { item: 'Egg Curry', count: 3 }
+        
     ],
     stock: [
-        { item: 'Chicken', qty: '5 kg' },
-        { item: 'Eggs', qty: '10 Pieces' },
-        { item: 'Vegetables', qty: '3 kg' }
+       
     ]
 };
 
