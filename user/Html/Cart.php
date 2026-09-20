@@ -481,6 +481,7 @@ while ($slots_result && $s = mysqli_fetch_assoc($slots_result)) {
             </form>
           </section>
 
+
           <?php if (!empty($_SESSION['cart'])): ?>
             <button class="place-order-btn" type="submit" form="orderForm">Place Order</button>
           <?php else: ?>
