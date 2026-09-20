@@ -22,6 +22,6 @@ composer.lock
 *.log
 error_log
 
-# ── Sensitive files ─────────────────────
-config.php
-stripe_config.php
+.env
+.env.local
+.env.*.local
