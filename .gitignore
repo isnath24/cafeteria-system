@@ -21,3 +21,7 @@ composer.lock
 # ── Logs ─────────────────────────────────────────────────────
 *.log
 error_log
+
+# ── Sensitive files ─────────────────────
+config.php
+stripe_config.php
