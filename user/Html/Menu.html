@@ -12,6 +12,47 @@
   />
 </head>
 <body>
+  <!-- 1. FIRST: ALL MENU ITEMS -->
+<section class="all-menu-section" style="margin-bottom: 40px;">
+  <h2>All Menu Items</h2>
+  <p>Browse our complete food catalog</p>
+
+  <div class="menu-grid">
+    <?php foreach ($all_menu_items as $item): ?>
+      <div class="menu-card">
+        <img src="../Images/<?= e($item['image']) ?>" alt="<?= e($item['food_name']) ?>">
+        <h3><?= e($item['food_name']) ?></h3>
+        <p>Rs. <?= number_format($item['price'], 2) ?></p>
+        <button onclick="addToCart(<?= $item['id'] ?>)">Add to Cart</button>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+<!-- Simple Divider Line -->
+<hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 30px 0;" />
+
+<!-- 2. SECOND: NOW SERVING (BREAKFAST / LUNCH / DINNER) -->
+<section class="now-serving-section">
+  <h2><?= e($current_meal_period) ?> — Now Serving</h2>
+  <p>Available right now for quick pickup!</p>
+
+  <div class="menu-grid">
+    <?php if (empty($now_serving_items)): ?>
+      <p>No items currently available for this meal period.</p>
+    <?php else: ?>
+      <?php foreach ($now_serving_items as $item): ?>
+        <div class="menu-card">
+          <span class="badge">Serving Now</span>
+          <img src="../Images/<?= e($item['image']) ?>" alt="<?= e($item['food_name']) ?>">
+          <h3><?= e($item['food_name']) ?></h3>
+          <p>Rs. <?= number_format($item['price'], 2) ?></p>
+          <button onclick="addToCart(<?= $item['id'] ?>)">Add to Cart</button>
+        </div>
+      <?php endforeach; ?>
+    <?php endif; ?>
+  </div>
+</section>
   <div class="menu-page">
     <aside class="sidebar">
       <div class="brand">
