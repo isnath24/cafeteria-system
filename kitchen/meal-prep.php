@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             mysqli_stmt_bind_param($notif, 'iis', $order_row['user_id'], $order_id, $msg_text);
             mysqli_stmt_execute($notif);
             mysqli_stmt_close($notif);
+            }
     }
     header('Location: meal-prep.php');
     exit;
