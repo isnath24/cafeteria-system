@@ -1,7 +1,7 @@
 <?php
 
 /**
- * kitchen/orders.php — Kitchen Orders View + Status Update
+ * kitchen/orders.php — Kitchen Orders View + Status Update + Date Filter
  */
 require_once '../config.php';
 require_once '../db.php';
@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         mysqli_stmt_execute($upd);
         mysqli_stmt_close($upd);
 
-        // Notify the student + send email if Ready
         if ($order_row) {
             $user_id = $order_row['user_id'];
             $f_stmt = mysqli_prepare($conn, "SELECT f.food_name FROM order_items oi JOIN food_items f ON f.id = oi.food_item_id WHERE oi.order_id = ?");
@@ -69,9 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             mysqli_stmt_execute($notif);
             mysqli_stmt_close($notif);
 
-            // ── 📧 SEND EMAIL when order becomes Ready ─────────
+            // 📧 SEND EMAIL when order becomes Ready
             if ($new_status === 'Ready') {
-                // Fetch student email (login email)
                 $stu_stmt = mysqli_prepare($conn, 'SELECT name, email FROM users WHERE id = ?');
                 mysqli_stmt_bind_param($stu_stmt, 'i', $user_id);
                 mysqli_stmt_execute($stu_stmt);
@@ -79,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 mysqli_stmt_close($stu_stmt);
 
                 if ($student && !empty($student['email'])) {
-                    // Fetch order items
                     $items_stmt = mysqli_prepare($conn,
                         "SELECT f.food_name, oi.quantity, oi.subtotal
                          FROM order_items oi
@@ -92,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     while ($r = mysqli_fetch_assoc($items_res)) $items_arr[] = $r;
                     mysqli_stmt_close($items_stmt);
 
-                    // Fetch pickup slot
                     $pickup_time = 'Check the app';
                     $slot_stmt = mysqli_prepare($conn,
                         "SELECT ps.start_time, ps.end_time
@@ -110,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                      . date('h:i A', strtotime($slot['end_time']));
                     }
 
-                    // Fetch QR code
                     $qr_image_url = null;
                     $qr_stmt = mysqli_prepare($conn, 'SELECT qr_token FROM qr_codes WHERE order_id = ?');
                     mysqli_stmt_bind_param($qr_stmt, 'i', $order_id);
@@ -123,7 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                       . urlencode($qr['qr_token']);
                     }
 
-                    // Send email
                     $subject = "🔔 Your Order #$order_id is Ready for Pickup!";
                     $body    = order_ready_email(
                         $student['name'],
@@ -160,6 +154,19 @@ $filter = $_GET['status'] ?? 'All';
 $allowed_filters = ['All', 'Pending', 'Processing', 'Ready', 'Completed'];
 if (!in_array($filter, $allowed_filters)) $filter = 'All';
 
+// ── DATE FILTER — DEFAULT = TODAY ─────────────────────────────
+$show_all = isset($_GET['all']) && $_GET['all'] === '1';
+
+if ($show_all) {
+    $date_filter = '';
+} else {
+    $date_filter = $_GET['date'] ?? date('Y-m-d');
+    if ($date_filter !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_filter) || !strtotime($date_filter))) {
+        $date_filter = date('Y-m-d');
+    }
+}
+$is_today = ($date_filter === date('Y-m-d'));
+
 // ── Status card counts ────────────────────────────────────────
 $count_all       = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders"))['n'];
 $count_pending   = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders WHERE order_status='Pending'"))['n'];
@@ -168,6 +175,21 @@ $count_ready     = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n 
 $count_completed = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders WHERE order_status='Completed'"))['n'];
 
 // ── FETCH orders ──────────────────────────────────────────────
+$where  = [];
+$types  = '';
+$params = [];
+
+if ($filter !== 'All') {
+    $where[]  = 'o.order_status = ?';
+    $types   .= 's';
+    $params[] = $filter;
+}
+if ($date_filter !== '') {
+    $where[]  = 'DATE(o.created_at) = ?';
+    $types   .= 's';
+    $params[] = $date_filter;
+}
+
 $sql = "SELECT o.id AS order_id, u.name AS student_name, f.food_name, oi.quantity,
                o.created_at, o.order_status
         FROM order_items oi
@@ -175,14 +197,33 @@ $sql = "SELECT o.id AS order_id, u.name AS student_name, f.food_name, oi.quantit
         JOIN users u      ON u.id = o.user_id
         JOIN food_items f ON f.id = oi.food_item_id";
 
-if ($filter !== 'All') {
-    $sql .= " WHERE o.order_status = ?";
-    $stmt = mysqli_prepare($conn, $sql . " ORDER BY o.created_at DESC");
-    mysqli_stmt_bind_param($stmt, 's', $filter);
+if (!empty($where)) {
+    $sql .= " WHERE " . implode(' AND ', $where);
+}
+$sql .= " ORDER BY o.created_at DESC";
+
+if (!empty($params)) {
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 } else {
-    $result = mysqli_query($conn, $sql . " ORDER BY o.created_at DESC");
+    $result = mysqli_query($conn, $sql);
+}
+
+// Helper: preserve filters in URLs
+function build_url($overrides = []) {
+    $current = [
+        'status' => $_GET['status'] ?? 'All',
+        'date'   => $_GET['date'] ?? '',
+        'all'    => $_GET['all'] ?? '',
+    ];
+    if (isset($overrides['date']) && $overrides['date'] !== '') {
+        $current['all'] = '';
+    }
+    $params = array_merge($current, $overrides);
+    $params = array_filter($params, function($v) { return $v !== '' && $v !== null; });
+    return 'orders.php' . ($params ? '?' . http_build_query($params) : '');
 }
 ?>
 <!DOCTYPE html>
@@ -254,12 +295,20 @@ if ($filter !== 'All') {
 
         <div class="page-header">
             <h1>Orders</h1>
-            <p class="subtitle">Manage and update order status</p>
+            <p class="subtitle">
+                <?php if ($show_all): ?>
+                    Showing all orders
+                <?php elseif ($is_today): ?>
+                    Showing today's orders
+                <?php else: ?>
+                    Showing orders for <?= date('d M Y', strtotime($date_filter)) ?>
+                <?php endif; ?>
+            </p>
         </div>
 
         <!-- Status Cards -->
         <div class="status-cards">
-            <a href="orders.php?status=All" style="text-decoration:none;color:inherit;">
+            <a href="<?= build_url(['status' => 'All']) ?>" style="text-decoration:none;color:inherit;">
                 <div class="status-card <?= $filter === 'All' ? 'active' : '' ?>" data-filter="all">
                     <div class="card-icon all"><i class="fas fa-list"></i></div>
                     <div class="card-info">
@@ -267,7 +316,7 @@ if ($filter !== 'All') {
                     </div>
                 </div>
             </a>
-            <a href="orders.php?status=Pending" style="text-decoration:none;color:inherit;">
+            <a href="<?= build_url(['status' => 'Pending']) ?>" style="text-decoration:none;color:inherit;">
                 <div class="status-card <?= $filter === 'Pending' ? 'active' : '' ?>" data-filter="pending">
                     <div class="card-icon pending"><i class="fas fa-clock"></i></div>
                     <div class="card-info">
@@ -275,7 +324,7 @@ if ($filter !== 'All') {
                     </div>
                 </div>
             </a>
-            <a href="orders.php?status=Processing" style="text-decoration:none;color:inherit;">
+            <a href="<?= build_url(['status' => 'Processing']) ?>" style="text-decoration:none;color:inherit;">
                 <div class="status-card <?= $filter === 'Processing' ? 'active' : '' ?>" data-filter="preparing">
                     <div class="card-icon preparing"><i class="fas fa-spinner"></i></div>
                     <div class="card-info">
@@ -283,7 +332,7 @@ if ($filter !== 'All') {
                     </div>
                 </div>
             </a>
-            <a href="orders.php?status=Ready" style="text-decoration:none;color:inherit;">
+            <a href="<?= build_url(['status' => 'Ready']) ?>" style="text-decoration:none;color:inherit;">
                 <div class="status-card <?= $filter === 'Ready' ? 'active' : '' ?>" data-filter="ready">
                     <div class="card-icon ready"><i class="fas fa-check-circle"></i></div>
                     <div class="card-info">
@@ -291,7 +340,7 @@ if ($filter !== 'All') {
                     </div>
                 </div>
             </a>
-            <a href="orders.php?status=Completed" style="text-decoration:none;color:inherit;">
+            <a href="<?= build_url(['status' => 'Completed']) ?>" style="text-decoration:none;color:inherit;">
                 <div class="status-card <?= $filter === 'Completed' ? 'active' : '' ?>" data-filter="completed">
                     <div class="card-icon completed"><i class="fas fa-check-double"></i></div>
                     <div class="card-info">
@@ -301,13 +350,60 @@ if ($filter !== 'All') {
             </a>
         </div>
 
-        <!-- Search -->
-        <div class="search-filter-bar">
-            <div class="search-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="searchInput" placeholder="Search Orders by ID, Student or Food Item..." />
-            </div>
+        <!-- Quick Date Buttons -->
+        <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+            <a href="orders.php?status=<?= e($filter) ?>" 
+               style="padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none;
+                      background:<?= (!$show_all && $is_today) ? '#7047f2' : 'white' ?>; 
+                      color:<?= (!$show_all && $is_today) ? 'white' : '#374151' ?>;
+                      border:1.5px solid <?= (!$show_all && $is_today) ? '#7047f2' : '#e5e7eb' ?>;">
+                <i class="fas fa-calendar-day"></i> Today
+            </a>
+            <a href="orders.php?status=<?= e($filter) ?>&all=1" 
+               style="padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none;
+                      background:<?= $show_all ? '#7047f2' : 'white' ?>; 
+                      color:<?= $show_all ? 'white' : '#374151' ?>;
+                      border:1.5px solid <?= $show_all ? '#7047f2' : '#e5e7eb' ?>;">
+                <i class="fas fa-list-ul"></i> All Dates
+            </a>
         </div>
+
+        <!-- Search + Date Filter -->
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+            <div style="flex:1; min-width:250px; background:white; border-radius:10px; padding:10px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                <i class="fas fa-search" style="color:#6b7280;"></i>
+                <input type="text" id="searchInput" placeholder="Search Orders by ID, Student or Food Item..." 
+                       style="border:none; outline:none; width:100%; font-size:14px; font-family:inherit;" />
+            </div>
+
+            <form method="GET" action="orders.php" 
+                  style="display:flex; align-items:center; gap:8px; background:white; border-radius:10px; padding:8px 14px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                <i class="fas fa-calendar-alt" style="color:#7047f2; font-size:15px;"></i>
+                <input type="hidden" name="status" value="<?= e($filter) ?>">
+                <input type="date" name="date" 
+                       value="<?= e($date_filter !== '' ? $date_filter : date('Y-m-d')) ?>"
+                       max="<?= date('Y-m-d') ?>"
+                       style="border:none; outline:none; font-size:13px; font-family:inherit; cursor:pointer; color:#374151;">
+                <button type="submit" 
+                        style="padding:7px 14px; border:none; border-radius:8px; background:#7047f2; color:white; font-weight:600; cursor:pointer; font-size:12.5px; font-family:inherit;">
+                    Filter
+                </button>
+            </form>
+        </div>
+
+        <?php if ($show_all): ?>
+            <p style="margin:0 0 16px; color:#166534; font-size:13.5px; text-align:center; background:#f0fdf4; padding:8px 16px; border-radius:8px; display:inline-block;">
+                📋 Showing <strong>all orders</strong>
+            </p>
+        <?php elseif ($is_today): ?>
+            <p style="margin:0 0 16px; color:#6b7280; font-size:13.5px; text-align:center; background:#f5f3ff; padding:8px 16px; border-radius:8px; display:inline-block;">
+                📅 Showing <strong style="color:#7047f2;">today's orders</strong>
+            </p>
+        <?php else: ?>
+            <p style="margin:0 0 16px; color:#6b7280; font-size:13.5px; text-align:center; background:#f5f3ff; padding:8px 16px; border-radius:8px; display:inline-block;">
+                📅 Showing orders for <strong style="color:#7047f2;"><?= date('d M Y', strtotime($date_filter)) ?></strong>
+            </p>
+        <?php endif; ?>
 
         <!-- Orders Table -->
         <div class="table-wrapper">
@@ -326,7 +422,10 @@ if ($filter !== 'All') {
                 <tbody id="ordersTableBody">
                     <?php if (mysqli_num_rows($result) === 0): ?>
                         <tr>
-                            <td colspan="7" style="text-align:center;color:#888;padding:30px;">No orders found for this filter.</td>
+                            <td colspan="7" style="text-align:center;color:#888;padding:30px;">
+                                <i class="fas fa-inbox" style="font-size:24px; display:block; margin-bottom:8px; opacity:0.5;"></i>
+                                No orders found<?= !$show_all ? ' for ' . date('d M Y', strtotime($date_filter)) : '' ?><?= $filter !== 'All' ? ' with status "' . e($filter) . '"' : '' ?>.
+                            </td>
                         </tr>
                     <?php else: ?>
                         <?php while ($row = mysqli_fetch_assoc($result)): ?>
