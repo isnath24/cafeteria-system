@@ -93,21 +93,7 @@ const dashboardData = {
 // ============================================================
 const ordersData = {
     allOrders: [
-        { id: '#0001', student: 'Nimal Perera', item: 'Rice & Curry', qty: 1, time: '12:30 PM', status: 'pending' },
-        { id: '#0002', student: 'Kasuni Fernando', item: 'Kottu', qty: 2, time: '12:45 PM', status: 'preparing' },
-        { id: '#0003', student: 'Sahan Weerasinghe', item: 'Fried Rice', qty: 1, time: '01:00 PM', status: 'ready' },
-        { id: '#0004', student: 'Dilin Jayasekara', item: 'Noodles', qty: 1, time: '01:15 PM', status: 'preparing' },
-        { id: '#0005', student: 'Tharindu Silva', item: 'Egg Curry', qty: 2, time: '01:30 PM', status: 'pending' },
-        { id: '#0006', student: 'Oshada Perera', item: 'Fish Curry', qty: 1, time: '01:45 PM', status: 'pending' },
-        { id: '#0007', student: 'Pabasara Netchmini', item: 'String Hoppers', qty: 1, time: '02:00 PM', status: 'preparing' },
-        { id: '#0008', student: 'Dinuka Madushan', item: 'Noodles', qty: 2, time: '02:15 PM', status: 'pending' },
-        { id: '#0009', student: 'Saman Kumara', item: 'Rice & Curry', qty: 1, time: '02:30 PM', status: 'completed' },
-        { id: '#0010', student: 'Lakshmi Perera', item: 'Kottu', qty: 1, time: '02:45 PM', status: 'completed' },
-        { id: '#0011', student: 'Nuwan Rathnayake', item: 'Fried Rice', qty: 2, time: '03:00 PM', status: 'ready' },
-        { id: '#0012', student: 'Kamal Silva', item: 'Noodles', qty: 1, time: '03:15 PM', status: 'pending' },
-        { id: '#0013', student: 'Anura Bandara', item: 'Egg Curry', qty: 1, time: '03:30 PM', status: 'preparing' },
-        { id: '#0014', student: 'Chandrika Perera', item: 'Fish Curry', qty: 1, time: '03:45 PM', status: 'ready' },
-        { id: '#0015', student: 'Ruwan Wickramasinghe', item: 'String Hoppers', qty: 2, time: '04:00 PM', status: 'completed' }
+        
     ],
     stats: {
         all: 15,
@@ -123,13 +109,7 @@ const ordersData = {
 // ============================================================
 const mealPrepData = {
     items: [
-        { id: 1, foodItem: 'Rice & Curry', total: 8, preparing: 3, ready: 5, status: 'pending' },
-        { id: 2, foodItem: 'Kottu', total: 5, preparing: 2, ready: 3, status: 'cooking' },
-        { id: 3, foodItem: 'Fried Rice', total: 6, preparing: 2, ready: 4, status: 'ready' },
-        { id: 4, foodItem: 'Noodles', total: 4, preparing: 1, ready: 3, status: 'pending' },
-        { id: 5, foodItem: 'String Hoppers', total: 3, preparing: 1, ready: 2, status: 'cooking' },
-        { id: 6, foodItem: 'Egg Curry', total: 3, preparing: 2, ready: 1, status: 'pending' },
-        { id: 7, foodItem: 'Fish Curry', total: 2, preparing: 1, ready: 1, status: 'ready' }
+       
     ]
 };
 
@@ -138,13 +118,7 @@ const mealPrepData = {
 // ============================================================
 const stockData = {
     items: [
-        { id: 1, foodItem: 'Rice', currentStock: 120, usedToday: 20, remaining: 100, unit: 'kg', minStock: 30, lastUpdated: '11 May 2026, 10:30 AM' },
-        { id: 2, foodItem: 'Chicken', currentStock: 50, usedToday: 15, remaining: 35, unit: 'kg', minStock: 10, lastUpdated: '11 May 2026, 10:30 AM' },
-        { id: 3, foodItem: 'Eggs', currentStock: 80, usedToday: 10, remaining: 70, unit: 'Pieces', minStock: 30, lastUpdated: '11 May 2026, 10:30 AM' },
-        { id: 4, foodItem: 'Vegetables', currentStock: 30, usedToday: 8, remaining: 22, unit: 'kg', minStock: 10, lastUpdated: '11 May 2026, 10:30 AM' },
-        { id: 5, foodItem: 'Noodles', currentStock: 40, usedToday: 12, remaining: 28, unit: 'Packets', minStock: 10, lastUpdated: '11 May 2026, 10:30 AM' },
-        { id: 6, foodItem: 'Oil', currentStock: 15, usedToday: 5, remaining: 10, unit: 'Litre', minStock: 5, lastUpdated: '11 May 2026, 10:30 AM' },
-        { id: 7, foodItem: 'Spices', currentStock: 20, usedToday: 3, remaining: 17, unit: 'kg', minStock: 5, lastUpdated: '11 May 2026, 10:30 AM' }
+        
     ]
 };
 
