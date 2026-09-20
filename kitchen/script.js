@@ -990,13 +990,12 @@ function showNotification(message) {
 
 function navigateTo(page) {
     const pages = {
-        'dashboard': 'index.html',
-        'orders': 'orders.html',
-        'meal-prep': 'meal-prep.html',
-        'stock': 'stock.html',
-        'low-stock': 'low-stock.html'
-    };
-    
+    'dashboard': 'index.php',
+    'orders': 'orders.php',
+    'meal-prep': 'meal-prep.php',
+    'stock': 'stock.php',
+    'low-stock': 'low-stock.php'
+};
     const url = pages[page];
     if (url) {
         window.location.href = url;
