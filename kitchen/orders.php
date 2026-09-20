@@ -5,10 +5,11 @@
  */
 require_once '../config.php';
 require_once '../db.php';
+require_once '../send_email.php';
+require_once '../email_templates.php';
 require_kitchen();
 
-// Status label/class mapping (DB uses Pending/Processing/Ready/Completed;
-// kitchen UI historically used Pending/Cooking/Ready — Processing = Cooking here)
+// Status label/class mapping
 function kitchen_status_label($status)
 {
     return $status === 'Processing' ? 'Cooking' : $status;
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         mysqli_stmt_execute($upd);
         mysqli_stmt_close($upd);
 
-        // Notify the student (same pattern as admin/orders.php)
+        // Notify the student + send email if Ready
         if ($order_row) {
             $user_id = $order_row['user_id'];
             $f_stmt = mysqli_prepare($conn, "SELECT f.food_name FROM order_items oi JOIN food_items f ON f.id = oi.food_item_id WHERE oi.order_id = ?");
@@ -67,6 +68,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             mysqli_stmt_bind_param($notif, 'iis', $user_id, $order_id, $msg_text);
             mysqli_stmt_execute($notif);
             mysqli_stmt_close($notif);
+
+            // ── 📧 SEND EMAIL when order becomes Ready ─────────
+            if ($new_status === 'Ready') {
+                // Fetch student email (login email)
+                $stu_stmt = mysqli_prepare($conn, 'SELECT name, email FROM users WHERE id = ?');
+                mysqli_stmt_bind_param($stu_stmt, 'i', $user_id);
+                mysqli_stmt_execute($stu_stmt);
+                $student = mysqli_fetch_assoc(mysqli_stmt_get_result($stu_stmt));
+                mysqli_stmt_close($stu_stmt);
+
+                if ($student && !empty($student['email'])) {
+                    // Fetch order items
+                    $items_stmt = mysqli_prepare($conn,
+                        "SELECT f.food_name, oi.quantity, oi.subtotal
+                         FROM order_items oi
+                         JOIN food_items f ON f.id = oi.food_item_id
+                         WHERE oi.order_id = ?");
+                    mysqli_stmt_bind_param($items_stmt, 'i', $order_id);
+                    mysqli_stmt_execute($items_stmt);
+                    $items_res = mysqli_stmt_get_result($items_stmt);
+                    $items_arr = [];
+                    while ($r = mysqli_fetch_assoc($items_res)) $items_arr[] = $r;
+                    mysqli_stmt_close($items_stmt);
+
+                    // Fetch pickup slot
+                    $pickup_time = 'Check the app';
+                    $slot_stmt = mysqli_prepare($conn,
+                        "SELECT ps.start_time, ps.end_time
+                         FROM orders o
+                         LEFT JOIN pickup_slots ps ON ps.id = o.pickup_slot_id
+                         WHERE o.id = ?");
+                    mysqli_stmt_bind_param($slot_stmt, 'i', $order_id);
+                    mysqli_stmt_execute($slot_stmt);
+                    $slot = mysqli_fetch_assoc(mysqli_stmt_get_result($slot_stmt));
+                    mysqli_stmt_close($slot_stmt);
+
+                    if ($slot && $slot['start_time']) {
+                        $pickup_time = date('h:i A', strtotime($slot['start_time']))
+                                     . ' - '
+                                     . date('h:i A', strtotime($slot['end_time']));
+                    }
+
+                    // Fetch QR code
+                    $qr_image_url = null;
+                    $qr_stmt = mysqli_prepare($conn, 'SELECT qr_token FROM qr_codes WHERE order_id = ?');
+                    mysqli_stmt_bind_param($qr_stmt, 'i', $order_id);
+                    mysqli_stmt_execute($qr_stmt);
+                    $qr = mysqli_fetch_assoc(mysqli_stmt_get_result($qr_stmt));
+                    mysqli_stmt_close($qr_stmt);
+
+                    if ($qr && !empty($qr['qr_token'])) {
+                        $qr_image_url = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
+                                      . urlencode($qr['qr_token']);
+                    }
+
+                    // Send email
+                    $subject = "🔔 Your Order #$order_id is Ready for Pickup!";
+                    $body    = order_ready_email(
+                        $student['name'],
+                        $order_id,
+                        $items_arr,
+                        $pickup_time,
+                        $qr_image_url
+                    );
+
+                    send_email($student['email'], $student['name'], $subject, $body);
+                }
+            }
         }
 
         header('Location: orders.php?msg=updated');
@@ -91,14 +160,14 @@ $filter = $_GET['status'] ?? 'All';
 $allowed_filters = ['All', 'Pending', 'Processing', 'Ready', 'Completed'];
 if (!in_array($filter, $allowed_filters)) $filter = 'All';
 
-// ── Status card counts (always show totals, regardless of active filter) ──
+// ── Status card counts ────────────────────────────────────────
 $count_all       = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders"))['n'];
 $count_pending   = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders WHERE order_status='Pending'"))['n'];
 $count_preparing = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders WHERE order_status='Processing'"))['n'];
 $count_ready     = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders WHERE order_status='Ready'"))['n'];
 $count_completed = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS n FROM orders WHERE order_status='Completed'"))['n'];
 
-// ── FETCH orders (one row per food item, most recent first) ────
+// ── FETCH orders ──────────────────────────────────────────────
 $sql = "SELECT o.id AS order_id, u.name AS student_name, f.food_name, oi.quantity,
                o.created_at, o.order_status
         FROM order_items oi
@@ -188,7 +257,7 @@ if ($filter !== 'All') {
             <p class="subtitle">Manage and update order status</p>
         </div>
 
-        <!-- Status Cards (double as filter tabs) -->
+        <!-- Status Cards -->
         <div class="status-cards">
             <a href="orders.php?status=All" style="text-decoration:none;color:inherit;">
                 <div class="status-card <?= $filter === 'All' ? 'active' : '' ?>" data-filter="all">

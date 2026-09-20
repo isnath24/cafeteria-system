@@ -5,8 +5,6 @@
  */
 require_once '../config.php';
 require_once '../db.php';
-require_once '../send_email.php';       
-require_once '../email_templates.php';
 require_kitchen();
 
 // ── ADVANCE STATUS (one step: Pending→Processing→Ready) ────────
@@ -48,75 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             mysqli_stmt_bind_param($notif, 'iis', $order_row['user_id'], $order_id, $msg_text);
             mysqli_stmt_execute($notif);
             mysqli_stmt_close($notif);
-
-                // ── Send email when order becomes Ready ──────────────
-    if ($next_status === 'Ready') {
-        // Fetch student email (login email)
-        $stu_stmt = mysqli_prepare($conn, 'SELECT name, email FROM users WHERE id = ?');
-        mysqli_stmt_bind_param($stu_stmt, 'i', $order_row['user_id']);
-        mysqli_stmt_execute($stu_stmt);
-        $student = mysqli_fetch_assoc(mysqli_stmt_get_result($stu_stmt));
-        mysqli_stmt_close($stu_stmt);
-
-        if ($student && !empty($student['email'])) {
-            // Fetch order items
-            $items_stmt = mysqli_prepare($conn,
-                "SELECT f.food_name, oi.quantity, oi.subtotal
-                 FROM order_items oi
-                 JOIN food_items f ON f.id = oi.food_item_id
-                 WHERE oi.order_id = ?");
-            mysqli_stmt_bind_param($items_stmt, 'i', $order_id);
-            mysqli_stmt_execute($items_stmt);
-            $items_res = mysqli_stmt_get_result($items_stmt);
-            $items_arr = [];
-            while ($r = mysqli_fetch_assoc($items_res)) $items_arr[] = $r;
-            mysqli_stmt_close($items_stmt);
-
-            // Fetch pickup slot
-            $pickup_time = 'Check the app';
-            $slot_stmt = mysqli_prepare($conn,
-                "SELECT ps.start_time, ps.end_time
-                 FROM orders o
-                 LEFT JOIN pickup_slots ps ON ps.id = o.pickup_slot_id
-                 WHERE o.id = ?");
-            mysqli_stmt_bind_param($slot_stmt, 'i', $order_id);
-            mysqli_stmt_execute($slot_stmt);
-            $slot = mysqli_fetch_assoc(mysqli_stmt_get_result($slot_stmt));
-            mysqli_stmt_close($slot_stmt);
-
-            if ($slot && $slot['start_time']) {
-                $pickup_time = date('h:i A', strtotime($slot['start_time']))
-                             . ' - '
-                             . date('h:i A', strtotime($slot['end_time']));
-            }
-
-            // Fetch QR code
-            $qr_image_url = null;
-            $qr_stmt = mysqli_prepare($conn, 'SELECT qr_token FROM qr_codes WHERE order_id = ?');
-            mysqli_stmt_bind_param($qr_stmt, 'i', $order_id);
-            mysqli_stmt_execute($qr_stmt);
-            $qr = mysqli_fetch_assoc(mysqli_stmt_get_result($qr_stmt));
-            mysqli_stmt_close($qr_stmt);
-
-            if ($qr && !empty($qr['qr_token'])) {
-                $qr_image_url = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
-                              . urlencode($qr['qr_token']);
-            }
-
-            // Send email
-            $subject = "Your Order #$order_id is Ready for Pickup!";
-            $body    = order_ready_email(
-                $student['name'],
-                $order_id,
-                $items_arr,
-                $pickup_time,
-                $qr_image_url
-            );
-
-            send_email($student['email'], $student['name'], $subject, $body);
-        }
-    }
-        }
     }
     header('Location: meal-prep.php');
     exit;
