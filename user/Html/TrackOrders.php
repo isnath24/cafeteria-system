@@ -362,30 +362,51 @@ $current_step = $order ? ($steps[$order['order_status']] ?? 1) : 0;
             <?php endif; ?>
 
             <!-- Order Summary -->
-            <div class="order-summary" style="background: white; border: 1px solid #e5e7eb; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); width: 100%;">
-              <h2>Order Details</h2>
-              <table class="summary-table" style="width: 100%;">
-                <thead>
-                  <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($items as $item): ?>
-                    <tr>
-                      <td><?= e($item['food_name']) ?></td>
-                      <td><?= $item['quantity'] ?></td>
-                      <td>Rs.<?= number_format($item['subtotal'], 2) ?></td>
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
-              <p class="track-total">Total: <strong>Rs.<?= number_format($order['total_amount'], 2) ?></strong></p>
-              <p class="track-method">Payment: <strong><?= e($order['payment_method']) ?></strong></p>
-              <p class="track-method">Placed: <strong><?= date('d M Y, h:i A', strtotime($order['created_at'])) ?></strong></p>
-            </div>
+<div class="order-summary" style="background: white; border: 1px solid #e5e7eb; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); width: 100%; font-family: sans-serif; color: #333;">
+  
+  <h2 style="margin-top: 0; margin-bottom: 20px; font-size: 1.25rem; font-weight: bold;">Order Details</h2>
+  
+  <table class="summary-table" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <thead>
+      <tr style="border-bottom: 1px solid #eee;">
+        <!-- Item කොලම් එක වම් පැත්තට (left align) -->
+        <th style="text-align: left; padding-bottom: 10px; font-weight: normal; color: #555;">Item</th>
+        <!-- Qty සහ Subtotal දකුණට හෝ මැදට (මෙහි මැදට දාලා ඇත) -->
+        <th style="text-align: center; padding-bottom: 10px; font-weight: normal; color: #555;">Qty</th>
+        <th style="text-align: right; padding-bottom: 10px; font-weight: normal; color: #555;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($items as $item): ?>
+        <tr>
+          <!-- Item නම වමට -->
+          <td style="text-align: left; padding: 8px 0;"><?= e($item['food_name']) ?></td>
+          <!-- Quantity මැදට -->
+          <td style="text-align: center; padding: 8px 0;"><?= $item['quantity'] ?></td>
+          <!-- මිල දකුණට -->
+          <td style="text-align: right; padding: 8px 0;">Rs.<?= number_format($item['subtotal'], 2) ?></td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+
+  <!-- Total, Payment, Placed ටික ලස්සනට පහළින් තියන්න -->
+  <div style="border-top: 1px solid #eee; padding-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+      <p style="margin: 5px 0; display: flex; justify-content: space-between;">
+          <span>Total:</span> 
+          <strong>Rs.<?= number_format($order['total_amount'], 2) ?></strong>
+      </p>
+      <p style="margin: 5px 0; display: flex; justify-content: space-between;">
+          <span>Payment:</span> 
+          <strong><?= e($order['payment_method']) ?></strong>
+      </p>
+      <p style="margin: 5px 0; display: flex; justify-content: space-between;">
+          <span>Placed:</span> 
+          <strong><?= date('d M Y, h:i A', strtotime($order['created_at'])) ?></strong>
+      </p>
+  </div>
+
+</div>
           <?php endif; ?>
         <?php endif; ?>
       </div>
