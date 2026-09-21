@@ -50,6 +50,9 @@
     <li <?= (basename($_SERVER['PHP_SELF']) === 'reports.php')    ? 'class="active"' : '' ?>>
       <a href="reports.php"><img src="images/reports.png" alt="Reports"><span>Reports</span></a>
     </li>
+    <li <?= (basename($_SERVER['PHP_SELF']) === 'walkin_order.php')  ? 'class="active"' : '' ?>>
+      <a href="walkin_order.php"><img src="images/orders.png" alt="Walk-in"><span>Walk-in Order</span></a>
+    </li>
     <li <?= (basename($_SERVER['PHP_SELF']) === 'users.php')      ? 'class="active"' : '' ?>>
       <a href="users.php"><img src="images/users.png" alt="Users"><span>Users</span></a>
     </li>
