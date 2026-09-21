@@ -369,9 +369,9 @@ $current_step = $order ? ($steps[$order['order_status']] ?? 1) : 0;
   <table class="summary-table" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
     <thead>
       <tr style="border-bottom: 1px solid #eee;">
-        <!-- Item කොලම් එක වම් පැත්තට (left align) -->
+        <!-- Item(left align) -->
         <th style="text-align: left; padding-bottom: 10px; font-weight: normal; color: #555;">Item</th>
-        <!-- Qty සහ Subtotal දකුණට හෝ මැදට (මෙහි මැදට දාලා ඇත) -->
+        <!-- Qty and Subtotal-->
         <th style="text-align: center; padding-bottom: 10px; font-weight: normal; color: #555;">Qty</th>
         <th style="text-align: right; padding-bottom: 10px; font-weight: normal; color: #555;">Subtotal</th>
       </tr>
@@ -379,18 +379,18 @@ $current_step = $order ? ($steps[$order['order_status']] ?? 1) : 0;
     <tbody>
       <?php foreach ($items as $item): ?>
         <tr>
-          <!-- Item නම වමට -->
+          <!-- Item name -->
           <td style="text-align: left; padding: 8px 0;"><?= e($item['food_name']) ?></td>
-          <!-- Quantity මැදට -->
+          <!-- Quantity center-->
           <td style="text-align: center; padding: 8px 0;"><?= $item['quantity'] ?></td>
-          <!-- මිල දකුණට -->
+          <!-- price right -->
           <td style="text-align: right; padding: 8px 0;">Rs.<?= number_format($item['subtotal'], 2) ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>
   </table>
 
-  <!-- Total, Payment, Placed ටික ලස්සනට පහළින් තියන්න -->
+  <!-- Total, Payment, Placed -->
   <div style="border-top: 1px solid #eee; padding-top: 15px; font-size: 0.95rem; line-height: 1.6;">
       <p style="margin: 5px 0; display: flex; justify-content: space-between;">
           <span>Total:</span> 
