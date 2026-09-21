@@ -1,10 +1,12 @@
 <?php
 
 /**
- * kitchen/meal-prep.php — Meal Preparation Tracking
+ * kitchen/meal-prep.php — Meal Preparation Tracking (with email)
  */
 require_once '../config.php';
 require_once '../db.php';
+require_once '../send_email.php';
+require_once '../email_templates.php';
 require_kitchen();
 
 // ── ADVANCE STATUS (one step: Pending→Processing→Ready) ────────
@@ -23,12 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         elseif ($order_row['order_status'] === 'Processing') $next_status = 'Ready';
 
         if ($next_status) {
+            // Update order status
             $upd = mysqli_prepare($conn, 'UPDATE orders SET order_status = ? WHERE id = ?');
             mysqli_stmt_bind_param($upd, 'si', $next_status, $order_id);
             mysqli_stmt_execute($upd);
             mysqli_stmt_close($upd);
 
-            // Notify the student
+            // Fetch food names
             $f_stmt = mysqli_prepare($conn, "SELECT f.food_name FROM order_items oi JOIN food_items f ON f.id = oi.food_item_id WHERE oi.order_id = ?");
             mysqli_stmt_bind_param($f_stmt, 'i', $order_id);
             mysqli_stmt_execute($f_stmt);
@@ -38,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             mysqli_stmt_close($f_stmt);
             $food_list = implode(', ', $food_names) ?: ("Order #" . $order_id);
 
+            // In-app notification
             $msg_text = $next_status === 'Processing'
                 ? "👨‍🍳 Kitchen is preparing your order (" . $food_list . ")! Hang tight."
                 : "🔔 Your order (" . $food_list . ") is ready for pickup! Collect it at the counter.";
@@ -46,7 +50,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             mysqli_stmt_bind_param($notif, 'iis', $order_row['user_id'], $order_id, $msg_text);
             mysqli_stmt_execute($notif);
             mysqli_stmt_close($notif);
+
+            // 📧 Send email when order becomes Ready
+            if ($next_status === 'Ready') {
+                $stu_stmt = mysqli_prepare($conn, 'SELECT name, email FROM users WHERE id = ?');
+                mysqli_stmt_bind_param($stu_stmt, 'i', $order_row['user_id']);
+                mysqli_stmt_execute($stu_stmt);
+                $student = mysqli_fetch_assoc(mysqli_stmt_get_result($stu_stmt));
+                mysqli_stmt_close($stu_stmt);
+
+                if ($student && !empty($student['email'])) {
+                    // Fetch order items
+                    $items_stmt = mysqli_prepare($conn,
+                        "SELECT f.food_name, oi.quantity, oi.subtotal
+                         FROM order_items oi
+                         JOIN food_items f ON f.id = oi.food_item_id
+                         WHERE oi.order_id = ?");
+                    mysqli_stmt_bind_param($items_stmt, 'i', $order_id);
+                    mysqli_stmt_execute($items_stmt);
+                    $items_res = mysqli_stmt_get_result($items_stmt);
+                    $items_arr = [];
+                    while ($r = mysqli_fetch_assoc($items_res)) $items_arr[] = $r;
+                    mysqli_stmt_close($items_stmt);
+
+                    // Fetch pickup slot
+                    $pickup_time = 'Check the app';
+                    $slot_stmt = mysqli_prepare($conn,
+                        "SELECT ps.start_time, ps.end_time
+                         FROM orders o
+                         LEFT JOIN pickup_slots ps ON ps.id = o.pickup_slot_id
+                         WHERE o.id = ?");
+                    mysqli_stmt_bind_param($slot_stmt, 'i', $order_id);
+                    mysqli_stmt_execute($slot_stmt);
+                    $slot = mysqli_fetch_assoc(mysqli_stmt_get_result($slot_stmt));
+                    mysqli_stmt_close($slot_stmt);
+
+                    if ($slot && $slot['start_time']) {
+                        $pickup_time = date('h:i A', strtotime($slot['start_time']))
+                                     . ' - '
+                                     . date('h:i A', strtotime($slot['end_time']));
+                    }
+
+                    // Fetch QR code
+                    $qr_image_url = null;
+                    $qr_stmt = mysqli_prepare($conn, 'SELECT qr_token FROM qr_codes WHERE order_id = ?');
+                    mysqli_stmt_bind_param($qr_stmt, 'i', $order_id);
+                    mysqli_stmt_execute($qr_stmt);
+                    $qr = mysqli_fetch_assoc(mysqli_stmt_get_result($qr_stmt));
+                    mysqli_stmt_close($qr_stmt);
+
+                    if ($qr && !empty($qr['qr_token'])) {
+                        $qr_image_url = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
+                                      . urlencode($qr['qr_token']);
+                    }
+
+                    // Send email
+                    $subject = "🔔 Your Order #$order_id is Ready for Pickup!";
+                    $body    = order_ready_email(
+                        $student['name'],
+                        $order_id,
+                        $items_arr,
+                        $pickup_time,
+                        $qr_image_url
+                    );
+
+                    send_email($student['email'], $student['name'], $subject, $body);
+                }
             }
+        }
     }
     header('Location: meal-prep.php');
     exit;
@@ -57,7 +128,7 @@ $filter_map = ['pending' => 'Pending', 'cooking' => 'Processing', 'ready' => 'Re
 $filter = $_GET['status'] ?? 'all';
 if (!in_array($filter, ['all', 'pending', 'cooking', 'ready'])) $filter = 'all';
 
-// ── FETCH active order items (Pending/Processing/Ready only — Completed excluded) ──
+// ── FETCH active order items ───────────────────────────────────
 $sql = "SELECT o.id AS order_id, f.food_name, oi.quantity, o.order_status
         FROM order_items oi
         JOIN orders o     ON o.id = oi.order_id
