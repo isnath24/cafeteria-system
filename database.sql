@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
     password    VARCHAR(255)    NOT NULL,
     student_id  VARCHAR(50)     DEFAULT NULL,
     phone       VARCHAR(20)     DEFAULT NULL,
-    role        ENUM('admin','student') NOT NULL DEFAULT 'student',
+    role        ENUM('admin','student','kitchen') NOT NULL DEFAULT 'student',
     created_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
